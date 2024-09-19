@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35004.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKEA.PL", "IKEA.PL\IKEA.PL.csproj", "{FDF956FA-D675-44FC-8CA4-CD819F608894}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKEA.BLL", "IKEA.BLL\IKEA.BLL.csproj", "{354905A6-2994-4130-8A4F-E78EF21A0D2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKEA.DAL", "IKEA.DAL\IKEA.DAL.csproj", "{AB4EA793-BC8C-47D1-B666-75F00DC47B6F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FDF956FA-D675-44FC-8CA4-CD819F608894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDF956FA-D675-44FC-8CA4-CD819F608894}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDF956FA-D675-44FC-8CA4-CD819F608894}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDF956FA-D675-44FC-8CA4-CD819F608894}.Release|Any CPU.Build.0 = Release|Any CPU
+		{354905A6-2994-4130-8A4F-E78EF21A0D2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{354905A6-2994-4130-8A4F-E78EF21A0D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{354905A6-2994-4130-8A4F-E78EF21A0D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{354905A6-2994-4130-8A4F-E78EF21A0D2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB4EA793-BC8C-47D1-B666-75F00DC47B6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB4EA793-BC8C-47D1-B666-75F00DC47B6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB4EA793-BC8C-47D1-B666-75F00DC47B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB4EA793-BC8C-47D1-B666-75F00DC47B6F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {90BDD426-9405-4563-BD4F-FA321F48F120}
+	EndGlobalSection
+EndGlobal
