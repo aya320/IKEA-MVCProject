@@ -49,7 +49,7 @@ namespace IKEA.BLL.Services.Department
           {
               Id = department.Id,
               Name = department.Name,
-              Description = department.Description,
+             
               CreationDate = department.CreationDate,
               Code = department.Code,
           }

@@ -13,7 +13,8 @@ namespace IKEA.PL.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            var department =_departmentService.GetAllDepartments();
+            return View(department);
         }
     }
 }
