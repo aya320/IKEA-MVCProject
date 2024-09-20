@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IKEA.BLL.Services.Department
 {
-    internal class DepartmentService : IDepartmentService
+    public class DepartmentService : IDepartmentService
     {
         private readonly IDepartmentRepository _departmentRepository;
 
