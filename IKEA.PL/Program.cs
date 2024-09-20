@@ -18,6 +18,7 @@ namespace IKEA.PL
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
