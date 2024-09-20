@@ -11,7 +11,7 @@ namespace IKEA.DAL.Persistance.Data
 {
     public class ApplicationDbContext :DbContext 
     {
-        public ApplicationDbContext():base()
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext>options):base(options)
         {
             
         }
@@ -21,11 +21,7 @@ namespace IKEA.DAL.Persistance.Data
                
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server= . ;Database = IKEA; Trusted_Connection = True /*MultipleActiveResultSets=True*/ ");
-        }
-
+     
         public DbSet<Department> Departments { get; set; }
     }
 }
