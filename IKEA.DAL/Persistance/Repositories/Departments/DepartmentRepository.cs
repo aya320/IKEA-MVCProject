@@ -40,6 +40,12 @@ namespace IKEA.DAL.Persistance.Repositories.Departments
 
         }
 
+        public IQueryable<Department> GetAllAsQueryable()
+        {
+              return _dbcontext.Departments;
+
+        }
+
         public Department GetById(int id)
         {
             var department = _dbcontext.Departments.Find(id);
