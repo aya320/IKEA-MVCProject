@@ -3,6 +3,8 @@ using IKEA.BLL.Models.Employee;
 using IKEA.BLL.Services.Department;
 using IKEA.BLL.Services.Employees;
 using IKEA.DAL.Entities.Employees;
+using IKEA.PL.ViewModels.Departments;
+using IKEA.PL.ViewModels.Employees;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IKEA.PL.Controllers
@@ -72,6 +74,75 @@ namespace IKEA.PL.Controllers
                 return NotFound();
 
             return View(employee);
+        }
+
+        [HttpGet]
+        public IActionResult Update(int? Id)
+        {
+            if (Id == null)
+                return BadRequest();
+            var entity = _employeeService.GetEmployeeById(Id.Value);
+            if (entity == null)
+                return NotFound();
+            return View(new EmployeeEditViewModel()
+            {
+
+                Name = entity.Name,
+                Salary = entity.Salary,
+                IsActive = entity.IsActive,
+                HiringDate = entity.HiringDate,
+                Address = entity.Address,
+                Email = entity.Email,
+                Age = entity.Age,
+                PhoneNumber = entity.PhoneNumber,
+                Gender = entity.Gender,
+            
+
+            });
+        }
+
+
+        [HttpPost]
+        public IActionResult Update([FromRoute] int id, EmployeeEditViewModel employeevm)
+        {
+            if (!ModelState.IsValid)
+                return View(employeevm);
+            var Message = string.Empty;
+            try
+            {
+                var entity = new UpdateEmployeeDto()
+                {
+                    Id = id,
+                    Name = employeevm.Name,
+                    Salary = employeevm.Salary,
+                    IsActive = employeevm.IsActive,
+                    Address = employeevm.Address,
+                    Age= employeevm.Age,
+                    PhoneNumber = employeevm.PhoneNumber,
+                    Gender = employeevm.Gender,
+                    Email = employeevm.Email,
+                    HiringDate= employeevm.HiringDate,
+                   
+                };
+                var EmployeeUpdate = _employeeService.UpdateEmployee(entity) > 0;
+                if (EmployeeUpdate)
+                    return RedirectToAction("Index");
+                else
+                    Message = "Failed To Update";
+
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, ex.Message);
+
+                Message = _environment.IsDevelopment() ? ex.Message : "Failed To Update";
+
+
+            }
+            ModelState.AddModelError(string.Empty, Message);
+            return View(employeevm);
         }
 
     }
