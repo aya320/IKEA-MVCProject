@@ -28,12 +28,12 @@ namespace IKEA.DAL.Persistance.Data.Configurations.Employees
             
             );
 
-            builder.Property(E => E.EmployeeType).HasConversion(
+           // builder.Property(E => E.EmployeeType).HasConversion(
 
-           (employeeType) => employeeType.ToString(),
-           (employeeType) => (EmployeeType)Enum.Parse(typeof(Gender), employeeType)
+           //(employeeType) => employeeType.ToString(),
+           //(employeeType) => (EmployeeType)Enum.Parse(typeof(Gender), employeeType)
 
-           );
+           //);
         }
     }
 }

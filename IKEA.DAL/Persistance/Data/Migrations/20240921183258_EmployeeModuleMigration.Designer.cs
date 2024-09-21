@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IKEA.DAL.Persistance.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240921133136_EmployeeModuleMigration")]
+    [Migration("20240921183258_EmployeeModuleMigration")]
     partial class EmployeeModuleMigration
     {
         /// <inheritdoc />
@@ -95,10 +95,6 @@ namespace IKEA.DAL.Persistance.Data.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmployeeType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")

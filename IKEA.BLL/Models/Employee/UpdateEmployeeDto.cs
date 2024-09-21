@@ -33,7 +33,7 @@ namespace IKEA.BLL.Models.Employee
         [Display(Name = "Hiring Date")]
         public DateTime HiringDate { get; set; }
         public Gender Gender { get; set; }
-        public EmployeeType EmployeeType { get; set; }
+        //public EmployeeType EmployeeType { get; set; }
 
         [Display(Name = "Is Active")]
 

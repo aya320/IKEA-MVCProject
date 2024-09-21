@@ -1,4 +1,5 @@
 ﻿using IKEA.BLL.Models.Employee;
+using IKEA.DAL.Entities.Departments;
 using IKEA.DAL.Entities.Employees;
 using IKEA.DAL.Persistance.Repositories.Departments;
 using IKEA.DAL.Persistance.Repositories.Employees;
@@ -35,7 +36,7 @@ namespace IKEA.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow,
                 PhoneNumber = entity.PhoneNumber,
                 Gender = entity.Gender,
-                EmployeeType = entity.EmployeeType,
+                //EmployeeType = entity.EmployeeType,
 
             };
             return _employeeRepository.Add(employee);
@@ -63,7 +64,7 @@ namespace IKEA.BLL.Services.Employees
                 Email = entity.Email,
                 Age = entity.Age,
                 Gender = entity.Gender,
-                EmployeeType = entity.EmployeeType,
+                //EmployeeType = entity.EmployeeType,
             });
         }
 
@@ -85,7 +86,11 @@ namespace IKEA.BLL.Services.Employees
                     Age = entity.Age,
                     PhoneNumber = entity.PhoneNumber,
                     Gender = entity.Gender,
-                    EmployeeType = entity.EmployeeType,
+                    LastModifiedBy = entity.LastModifiedBy,
+                    CreatedBy = entity.CreatedBy,
+                    CreatedOn = entity.CreatedOn,
+                    LastModifiedOn = entity.LastModifiedOn,
+                    //EmployeeType = entity.EmployeeType,
                 };
             else
                 return null;
@@ -108,7 +113,7 @@ namespace IKEA.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow,
                 PhoneNumber = entity.PhoneNumber,
                 Gender = entity.Gender,
-                EmployeeType = entity.EmployeeType,
+                //EmployeeType = entity.EmployeeType,
 
             };
             return _employeeRepository.Update(employee);

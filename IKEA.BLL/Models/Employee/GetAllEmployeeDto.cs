@@ -17,7 +17,7 @@ namespace IKEA.BLL.Models.Employee
         public decimal Salary { get; set; }
         public string? Email { get; set; }
         public Gender Gender { get; set; }
-        public EmployeeType EmployeeType { get; set; }
+        //public EmployeeType EmployeeType { get; set; }
         public bool IsActive { get; set; }
     }
 }
