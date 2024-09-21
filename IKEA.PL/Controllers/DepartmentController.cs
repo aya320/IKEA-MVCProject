@@ -130,18 +130,43 @@ namespace IKEA.PL.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult Delete(int? Id)
+        //[HttpGet]
+        //public IActionResult Delete(int? Id)
+        //{
+        //    if (Id == null)
+        //        return BadRequest();
+        //    var department = _departmentService.GetDepartmentById(Id.Value);
+        //    if (department == null)
+        //        return NotFound();
+
+        //    return View(department);
+        //}
+
+        [HttpPost]
+        public IActionResult Delete( int id)
         {
-            if (Id == null)
-                return BadRequest();
-            var department = _departmentService.GetDepartmentById(Id.Value);
-            if (department == null)
-                return NotFound();
+            var Message = string.Empty;
+            try
+            {
+                var Deleted = _departmentService.DeleteDepartment(id) ;
+                if (Deleted)
+                    return RedirectToAction("Index");
+                else
+                    Message = "Failed To Delete";
 
-            return View(department);
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, ex.Message);
+
+                Message = _environment.IsDevelopment() ? ex.Message : "Failed To Delete";
+
+
+            }
+          
+            return RedirectToAction(nameof(Index));
         }
-
-       
     }
 }
