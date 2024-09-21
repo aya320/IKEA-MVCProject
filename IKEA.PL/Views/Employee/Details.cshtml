@@ -3,7 +3,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h1 style="color:palevioletred"> Employee Details</h1>
+<h1 style="color:royalblue"> Employee Details</h1>
 <br />
 <br />
 
@@ -35,21 +35,21 @@
                 <label class="col-form-label" asp-for="Address"></label>
                 <input asp-for="Address" class="form-control" readonly />
             </div>
-            <div class="form-group col-12">
+            <div class="form-group col-6">
                 <label class="col-form-label" asp-for="Salary"></label>
                 <input asp-for="Salary" class="form-control" readonly />
             </div>
-            <div class="form-group col-12">
+            <div class="form-group col-6">
                 <label class="col-form-label" asp-for="HiringDate"></label>
                 <input asp-for="HiringDate" class="form-control" readonly />
             </div>
 
-            <div class="form-group col-12">
+            <div class="form-group col-6">
                 <label class="col-form-label" asp-for="PhoneNumber"></label>
                 <input asp-for="PhoneNumber" class="form-control" readonly />
             </div>
 
-            <div class="form-group col-12">
+            <div class="form-group col-6">
                 <label class="col-form-label" asp-for="Gender"></label>
                 <input asp-for="Gender" class="form-control" readonly />
             </div>
@@ -79,7 +79,7 @@
 
     <div class="mt-4">
 
-        <a asp-action="Update" asp-route-Id="@Model.Id " class="btn btn-info"> Update   </a>
-        <a asp-action="Index" class="btn btn-danger"> Back To List   </a>
+        <a asp-action="Update" asp-route-Id="@Model.Id " class="btn " style="background-color:steelblue"> Update   </a>
+        <a asp-action="Index" class="btn " style="background-color:skyblue"> Back To List   </a>
 
     </div>
