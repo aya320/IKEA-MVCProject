@@ -1,6 +1,9 @@
 ﻿using IKEA.BLL.Models.Department;
 using IKEA.BLL.Services.Department;
+using IKEA.DAL.Entities.Departments;
+using IKEA.PL.ViewModels.Departments;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace IKEA.PL.Controllers
 {
@@ -49,19 +52,12 @@ namespace IKEA.PL.Controllers
             catch (Exception ex) 
             {
                 _logger.LogError(ex, ex.Message);
-                if (_environment.IsDevelopment())
-                {
-                    Message = ex.Message;
-                    return View(departmentDto);
-                }
-                else
-                {
-                    Message = "Department is not created";
-                    return View("Error", Message);
 
-                }
+                Message = _environment.IsDevelopment() ? ex.Message : "Failed To Create";
 
             }
+            ModelState.AddModelError(string.Empty, Message);
+            return View(departmentDto);
         }
 
         [HttpGet]
@@ -78,5 +74,74 @@ namespace IKEA.PL.Controllers
             return View(deppartment);
         }
 
+        [HttpGet]
+        public IActionResult Update(int? Id)
+        {
+            if (Id == null)
+                return BadRequest();
+            var department=_departmentService.GetDepartmentById(Id.Value);
+            if (department == null)
+                return NotFound();
+            return View(new DepartmentEditViewModel()
+            {
+                Code=department.Code,
+                Name=department.Name,
+                Description=department.Description,
+                CreationDate=department.CreationDate,
+
+            });
+        }
+
+        [HttpPost]
+        public IActionResult Update([FromRoute]int id, DepartmentEditViewModel departmentvm)
+        {
+            if (!ModelState.IsValid)
+                return View(departmentvm);
+            var Message =string.Empty;
+            try
+            {
+                var department = new UpdateDepartmentDto()
+                {
+                    Id= id,
+                    Code= departmentvm.Code,
+                    Name=departmentvm.Name,
+                    Description=departmentvm.Description,
+                    CreationDate=departmentvm.CreationDate,
+                };
+                var departmentUpdate = _departmentService.UpdateDepartment(department) >0;
+                if (departmentUpdate )
+                    return RedirectToAction("Index");
+                else
+                 Message = "Failed To Update";
+
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, ex.Message);
+
+                Message = _environment.IsDevelopment() ? ex.Message : "Failed To Update";
+            
+
+            }
+            ModelState.AddModelError(string.Empty, Message);
+            return View(departmentvm);
+        }
+
+
+        [HttpGet]
+        public IActionResult Delete(int? Id)
+        {
+            if (Id == null)
+                return BadRequest();
+            var department = _departmentService.GetDepartmentById(Id.Value);
+            if (department == null)
+                return NotFound();
+
+            return View(department);
+        }
+
+       
     }
 }
