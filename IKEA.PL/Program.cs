@@ -24,6 +24,7 @@ namespace IKEA.PL
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 
 
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
