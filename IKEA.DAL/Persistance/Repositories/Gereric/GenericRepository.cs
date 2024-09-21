@@ -25,7 +25,8 @@ namespace IKEA.DAL.Persistance.Repositories.Gereric
 
         public int Delete(T entity)
         {
-            _dbcontext.Set<T>().Remove(entity);
+            entity.IsDeleted=true;
+            _dbcontext.Set<T>().Update(entity);
             return _dbcontext.SaveChanges();
         }
 
@@ -33,10 +34,10 @@ namespace IKEA.DAL.Persistance.Repositories.Gereric
         {
             if (AsNoTracking)
             {
-                return _dbcontext.Set<T>().AsNoTracking().ToList();
+                return _dbcontext.Set<T>().Where(a=>!a.IsDeleted).AsNoTracking().ToList();
             }
             else
-                return _dbcontext.Set<T>().ToList();
+                return _dbcontext.Set<T>().Where(a => !a.IsDeleted).ToList();
 
 
         }
