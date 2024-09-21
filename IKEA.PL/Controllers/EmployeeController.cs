@@ -145,5 +145,33 @@ namespace IKEA.PL.Controllers
             return View(employeevm);
         }
 
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var Message = string.Empty;
+            try
+            {
+                var Deleted = _employeeService.DeleteEmployee(id);
+                if (Deleted)
+                    return RedirectToAction("Index");
+                else
+                    Message = "Failed To Delete";
+
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, ex.Message);
+
+                Message = _environment.IsDevelopment() ? ex.Message : "Failed To Delete";
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

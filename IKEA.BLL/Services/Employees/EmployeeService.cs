@@ -54,7 +54,7 @@ namespace IKEA.BLL.Services.Employees
 
         public IEnumerable<GetAllEmployeeDto> GetAllEmployees()
         {
-            return _employeeRepository.GetAllAsQueryable().Select(entity => new GetAllEmployeeDto
+            return _employeeRepository.GetAllAsQueryable().Where(a=>!a.IsDeleted).Select(entity => new GetAllEmployeeDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
