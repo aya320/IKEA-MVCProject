@@ -16,6 +16,8 @@ namespace IKEA.PL.Controllers
         public DepartmentController(IDepartmentService departmentService, ILogger<DepartmentController> logger, IWebHostEnvironment environment)
         {
             _departmentService = departmentService;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _environment = environment ?? throw new ArgumentNullException(nameof(environment));
         }
 
         [HttpGet]
@@ -130,25 +132,14 @@ namespace IKEA.PL.Controllers
         }
 
 
-        //[HttpGet]
-        //public IActionResult Delete(int? Id)
-        //{
-        //    if (Id == null)
-        //        return BadRequest();
-        //    var department = _departmentService.GetDepartmentById(Id.Value);
-        //    if (department == null)
-        //        return NotFound();
-
-        //    return View(department);
-        //}
 
         [HttpPost]
-        public IActionResult Delete( int id)
+        public IActionResult Delete(int id)
         {
             var Message = string.Empty;
             try
             {
-                var Deleted = _departmentService.DeleteDepartment(id) ;
+                var Deleted = _departmentService.DeleteDepartment(id);
                 if (Deleted)
                     return RedirectToAction("Index");
                 else
@@ -165,7 +156,7 @@ namespace IKEA.PL.Controllers
 
 
             }
-          
+
             return RedirectToAction(nameof(Index));
         }
     }
