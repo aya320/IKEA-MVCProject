@@ -57,10 +57,13 @@ namespace IKEA.PL.Controllers
                 };
                 var department = _departmentService.CreateDepartment(Created);
                 if (department > 0)
-                    return RedirectToAction("Index");
+                    TempData["Message"] = "Created Successfully";  
                 else
-                    ModelState.AddModelError(string.Empty, "Failed To Create");
-                return View(departmentvm);
+                    TempData["Message"] = "Failed To Create ";
+
+
+                return RedirectToAction("Index");
+
 
             }
             catch (Exception ex)

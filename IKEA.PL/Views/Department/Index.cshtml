@@ -13,7 +13,22 @@
 }
  *@
 <br />
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+            <div class="toast-header">
 
+                <strong class="me-auto" style="background-color:bl"><i class="fa-solid fa-bell  fa-2x" style="color:crimson"></i></strong>
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" style="  color:crimson ; font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif ;font-size:large">
+                @TempData["Message"]
+            </div>
+        </div>
+    </div>
+}
 
 <a asp-controller="Department" asp-action="Create" class="btn " style="background-color: lightpink ;color:indigo ;font-size:xx-large;font-family:Bahnschrift ">
     Create New Department 
