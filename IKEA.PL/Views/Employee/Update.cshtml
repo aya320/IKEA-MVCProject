@@ -8,7 +8,7 @@
 <div class="row justify-content-center align-items-center flex-column">
     <h1 class="col-6 my-4" style="color:lightpink"> Update  Employee</h1>
 
-    <form action="/Employee/Update" method="post" class="col-5">
+    <form asp-action="Update" method="post" class="col-5">
         <div asp-validation-summary="ModelOnly"> </div>
         <div class="form-group">
             <label class="form-label" asp-for="Name">   </label>
@@ -105,8 +105,5 @@
 
     </form>
 </div>
-@* @section Validation
-{
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-} *@
+
+<partial name="_ValidationScriptsPartial" />

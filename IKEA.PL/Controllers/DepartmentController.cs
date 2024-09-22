@@ -23,7 +23,7 @@ namespace IKEA.PL.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var department =_departmentService.GetAllDepartments();
+            var department = _departmentService.GetAllDepartments();
             return View(department);
         }
 
@@ -38,23 +38,30 @@ namespace IKEA.PL.Controllers
         //[ValidateAntiForgeryToken]
 
 
-        public IActionResult Create(CreateDepartmentDto departmentDto)
+        public IActionResult Create(DepartmentEditViewModel departmentvm)
         {
-           if(!ModelState.IsValid)
-                return View(departmentDto);
+            if (!ModelState.IsValid)
+                return View(departmentvm);
 
-           var Message = string.Empty;
+            var Message = string.Empty;
             try
             {
-                var department= _departmentService.CreateDepartment(departmentDto);
+                var Created = new CreateDepartmentDto()
+                {
+                    Code = departmentvm.Code,
+                    Name = departmentvm.Name,
+                    CreationDate = departmentvm.CreationDate,
+                    Description = departmentvm.Description,
+                };
+                var department = _departmentService.CreateDepartment(Created);
                 if (department > 0)
                     return RedirectToAction("Index");
                 else
                     ModelState.AddModelError(string.Empty, "Failed To Create");
-                return View(departmentDto);
+                return View(departmentvm);
 
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
 
@@ -62,7 +69,7 @@ namespace IKEA.PL.Controllers
 
             }
             ModelState.AddModelError(string.Empty, Message);
-            return View(departmentDto);
+            return View(departmentvm);
         }
 
         [HttpGet]
@@ -73,7 +80,7 @@ namespace IKEA.PL.Controllers
 
             var deppartment = _departmentService.GetDepartmentById(Id.Value);
 
-            if(deppartment == null) 
+            if (deppartment == null)
                 return NotFound();
 
             return View(deppartment);
@@ -84,15 +91,15 @@ namespace IKEA.PL.Controllers
         {
             if (Id == null)
                 return BadRequest();
-            var department=_departmentService.GetDepartmentById(Id.Value);
+            var department = _departmentService.GetDepartmentById(Id.Value);
             if (department == null)
                 return NotFound();
             return View(new DepartmentEditViewModel()
             {
-                Code=department.Code,
-                Name=department.Name,
-                Description=department.Description,
-                CreationDate=department.CreationDate,
+                Code = department.Code,
+                Name = department.Name,
+                Description = department.Description,
+                CreationDate = department.CreationDate,
 
             });
         }
@@ -100,26 +107,26 @@ namespace IKEA.PL.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
 
-        public IActionResult Update([FromRoute]int id, DepartmentEditViewModel departmentvm)
+        public IActionResult Update([FromRoute] int id, DepartmentEditViewModel departmentvm)
         {
             if (!ModelState.IsValid)
                 return View(departmentvm);
-            var Message =string.Empty;
+            var Message = string.Empty;
             try
             {
                 var department = new UpdateDepartmentDto()
                 {
-                    Id= id,
-                    Code= departmentvm.Code,
-                    Name=departmentvm.Name,
-                    Description=departmentvm.Description,
-                    CreationDate=departmentvm.CreationDate,
+                    Id = id,
+                    Code = departmentvm.Code,
+                    Name = departmentvm.Name,
+                    Description = departmentvm.Description,
+                    CreationDate = departmentvm.CreationDate,
                 };
-                var departmentUpdate = _departmentService.UpdateDepartment(department) >0;
-                if (departmentUpdate )
+                var departmentUpdate = _departmentService.UpdateDepartment(department) > 0;
+                if (departmentUpdate)
                     return RedirectToAction("Index");
                 else
-                 Message = "Failed To Update";
+                    Message = "Failed To Update";
 
 
             }
@@ -129,7 +136,7 @@ namespace IKEA.PL.Controllers
                 _logger.LogError(ex, ex.Message);
 
                 Message = _environment.IsDevelopment() ? ex.Message : "Failed To Update";
-            
+
 
             }
             ModelState.AddModelError(string.Empty, Message);
@@ -137,34 +144,33 @@ namespace IKEA.PL.Controllers
         }
 
 
+        //[HttpGet]
+        //public IActionResult Delete(int? Id) 
+        //{
+        //  return View();
+        //}
 
-        [HttpPost]
         //[ValidateAntiForgeryToken]
-
-        public IActionResult Delete(int id)
+        [HttpPost]
+        public IActionResult Delete(int Id)
         {
-            var Message = string.Empty;
             try
             {
-                var Deleted = _departmentService.DeleteDepartment(id);
-                if (Deleted)
+                var deleted = _departmentService.DeleteDepartment(Id);
+                if (deleted)
                     return RedirectToAction("Index");
                 else
-                    Message = "Failed To Delete";
-
-
+                    ModelState.AddModelError(string.Empty, "Failed To Delete");
             }
             catch (Exception ex)
             {
-
                 _logger.LogError(ex, ex.Message);
-
-                Message = _environment.IsDevelopment() ? ex.Message : "Failed To Delete";
-
-
+                var message = _environment.IsDevelopment() ? ex.Message : "Failed To Delete";
+                ModelState.AddModelError(string.Empty, message);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index)); 
         }
+
     }
 }
