@@ -35,6 +35,8 @@ namespace IKEA.PL.Controllers
 
 
         [HttpPost]
+        //[ValidateAntiForgeryToken]
+
         public IActionResult Create(CreateEmployeeDto  employeeDto)
         {
             if (!ModelState.IsValid)
@@ -103,6 +105,8 @@ namespace IKEA.PL.Controllers
 
 
         [HttpPost]
+        //[ValidateAntiForgeryToken]
+
         public IActionResult Update([FromRoute] int id, EmployeeEditViewModel employeevm)
         {
             if (!ModelState.IsValid)
@@ -147,6 +151,8 @@ namespace IKEA.PL.Controllers
 
 
         [HttpPost]
+        //[ValidateAntiForgeryToken]
+
         public IActionResult Delete(int id)
         {
             var Message = string.Empty;
