@@ -37,5 +37,6 @@ namespace IKEA.BLL.Models.Employee
         [Display(Name = "Is Active")]
 
         public bool IsActive { get; set; }
+        public int? DepartmentId { get; set; }
     }
 }

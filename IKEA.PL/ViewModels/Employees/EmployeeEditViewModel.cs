@@ -31,5 +31,6 @@ namespace IKEA.PL.ViewModels.Employees
         [Display(Name = "Is Active")]
 
         public bool IsActive { get; set; }
+        public int ? DepartmentId { get; set; }
     }
 }

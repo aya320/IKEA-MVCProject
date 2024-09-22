@@ -37,6 +37,7 @@ namespace IKEA.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow,
                 PhoneNumber = entity.PhoneNumber,
                 Gender = entity.Gender,
+                DepartmentId = entity.DepartmentId,
                 //EmployeeType = entity.EmployeeType,
 
             };
@@ -120,6 +121,7 @@ namespace IKEA.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow,
                 PhoneNumber = entity.PhoneNumber,
                 Gender = entity.Gender,
+                DepartmentId = entity.DepartmentId,
                 //EmployeeType = entity.EmployeeType,
 
             };
