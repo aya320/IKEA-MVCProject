@@ -18,6 +18,7 @@ namespace IKEA.DAL.Persistance.Data.Configurations.Departments
             builder.Property(A => A.Code).HasColumnType("varchar(20)").IsRequired();
             builder.Property(A => A.CreatedOn).HasDefaultValueSql("GETDATE()");
             builder.Property(A => A.LastModifiedOn).HasComputedColumnSql().HasComputedColumnSql("GETDATE()");
+
                 
                 ;
 
