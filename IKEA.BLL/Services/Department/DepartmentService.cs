@@ -45,7 +45,7 @@ namespace IKEA.BLL.Services.Department
 
         public IEnumerable<GetAllDepartmentDto> GetAllDepartments()
         {
-          var deparments = _departmentRepository.GetAllAsQueryable().Select(department => new GetAllDepartmentDto
+          var deparments = _departmentRepository.GetIQueryable().Where(a => !a.IsDeleted).Select(department => new GetAllDepartmentDto
           {
               Id = department.Id,
               Name = department.Name,

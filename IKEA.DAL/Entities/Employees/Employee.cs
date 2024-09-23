@@ -1,4 +1,5 @@
 ﻿using IKEA.DAL.Common.Enums;
+using IKEA.DAL.Entities.Departments;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -21,6 +22,9 @@ namespace IKEA.DAL.Entities.Employees
         public Gender Gender { get; set; }
         //public EmployeeType EmployeeType { get; set; }
         public bool IsActive { get; set; }
+
+        public int? DepartmentId { get; set; }
+        public Department? Department { get; set; }
 
 
     }

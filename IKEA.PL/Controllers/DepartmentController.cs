@@ -22,8 +22,10 @@ namespace IKEA.PL.Controllers
 
         [HttpGet]
         public IActionResult Index()
-        {
-            var department =_departmentService.GetAllDepartments();
+        {  //
+           // ViewData["Message"] = "Hello Yoyo";
+           // ViewBag.Message = "Hello Ayoy";
+            var department = _departmentService.GetAllDepartments();
             return View(department);
         }
 
@@ -35,23 +37,36 @@ namespace IKEA.PL.Controllers
 
 
         [HttpPost]
-        public IActionResult Create(CreateDepartmentDto departmentDto)
-        {
-           if(!ModelState.IsValid)
-                return View(departmentDto);
+        //[ValidateAntiForgeryToken]
 
-           var Message = string.Empty;
+
+        public IActionResult Create(DepartmentEditViewModel departmentvm)
+        {
+            if (!ModelState.IsValid)
+                return View(departmentvm);
+
+            var Message = string.Empty;
             try
             {
-                var department= _departmentService.CreateDepartment(departmentDto);
+                var Created = new CreateDepartmentDto()
+                {
+                    Code = departmentvm.Code,
+                    Name = departmentvm.Name,
+                    CreationDate = departmentvm.CreationDate,
+                    Description = departmentvm.Description,
+                };
+                var department = _departmentService.CreateDepartment(Created);
                 if (department > 0)
-                    return RedirectToAction("Index");
+                    TempData["Message"] = "Created Successfully";  
                 else
-                    ModelState.AddModelError(string.Empty, "Failed To Create");
-                return View(departmentDto);
+                    TempData["Message"] = "Failed To Create ";
+
+
+                return RedirectToAction("Index");
+
 
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
 
@@ -59,7 +74,7 @@ namespace IKEA.PL.Controllers
 
             }
             ModelState.AddModelError(string.Empty, Message);
-            return View(departmentDto);
+            return View(departmentvm);
         }
 
         [HttpGet]
@@ -70,7 +85,7 @@ namespace IKEA.PL.Controllers
 
             var deppartment = _departmentService.GetDepartmentById(Id.Value);
 
-            if(deppartment == null) 
+            if (deppartment == null)
                 return NotFound();
 
             return View(deppartment);
@@ -81,40 +96,42 @@ namespace IKEA.PL.Controllers
         {
             if (Id == null)
                 return BadRequest();
-            var department=_departmentService.GetDepartmentById(Id.Value);
+            var department = _departmentService.GetDepartmentById(Id.Value);
             if (department == null)
                 return NotFound();
             return View(new DepartmentEditViewModel()
             {
-                Code=department.Code,
-                Name=department.Name,
-                Description=department.Description,
-                CreationDate=department.CreationDate,
+                Code = department.Code,
+                Name = department.Name,
+                Description = department.Description,
+                CreationDate = department.CreationDate,
 
             });
         }
 
         [HttpPost]
-        public IActionResult Update([FromRoute]int id, DepartmentEditViewModel departmentvm)
+        //[ValidateAntiForgeryToken]
+
+        public IActionResult Update([FromRoute] int id, DepartmentEditViewModel departmentvm)
         {
             if (!ModelState.IsValid)
                 return View(departmentvm);
-            var Message =string.Empty;
+            var Message = string.Empty;
             try
             {
                 var department = new UpdateDepartmentDto()
                 {
-                    Id= id,
-                    Code= departmentvm.Code,
-                    Name=departmentvm.Name,
-                    Description=departmentvm.Description,
-                    CreationDate=departmentvm.CreationDate,
+                    Id = id,
+                    Code = departmentvm.Code,
+                    Name = departmentvm.Name,
+                    Description = departmentvm.Description,
+                    CreationDate = departmentvm.CreationDate,
                 };
-                var departmentUpdate = _departmentService.UpdateDepartment(department) >0;
-                if (departmentUpdate )
+                var departmentUpdate = _departmentService.UpdateDepartment(department) > 0;
+                if (departmentUpdate)
                     return RedirectToAction("Index");
                 else
-                 Message = "Failed To Update";
+                    Message = "Failed To Update";
 
 
             }
@@ -124,7 +141,7 @@ namespace IKEA.PL.Controllers
                 _logger.LogError(ex, ex.Message);
 
                 Message = _environment.IsDevelopment() ? ex.Message : "Failed To Update";
-            
+
 
             }
             ModelState.AddModelError(string.Empty, Message);
@@ -132,7 +149,13 @@ namespace IKEA.PL.Controllers
         }
 
 
+        //[HttpGet]
+        //public IActionResult Delete(int? Id) 
+        //{
+        //  return View();
+        //}
 
+        //[ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult Delete(int id)
         {
@@ -159,5 +182,6 @@ namespace IKEA.PL.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

@@ -12,7 +12,9 @@ namespace IKEA.DAL.Persistance.Repositories.Gereric
     {
         IEnumerable<T> GetAll(bool AsNoTracking = true);
 
-        IQueryable<T> GetAllAsQueryable();
+        IQueryable<T> GetIQueryable();
+        IEnumerable<T> GetIEnumerable();
+
 
         T? GetById(int id);
         int Add(T entity);

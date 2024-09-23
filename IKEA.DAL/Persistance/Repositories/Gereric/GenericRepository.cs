@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IKEA.DAL.Persistance.Repositories.Gereric
 {
-    public class GenericRepository<T> where T : ModelBase
+    public class GenericRepository<T>:IGenericRepository<T> where T : ModelBase 
     {
         private protected readonly ApplicationDbContext _dbcontext;
         public GenericRepository(ApplicationDbContext dbContext)
@@ -42,10 +42,14 @@ namespace IKEA.DAL.Persistance.Repositories.Gereric
 
         }
 
-        public IQueryable<T> GetAllAsQueryable()
+        public IQueryable<T> GetIQueryable()
         {
             return _dbcontext.Set<T>();
 
+        }
+        public IEnumerable<T> GetIEnumerable()
+        {
+            throw new NotImplementedException();
         }
 
         public T GetById(int id)
@@ -60,5 +64,7 @@ namespace IKEA.DAL.Persistance.Repositories.Gereric
             _dbcontext.Set<T>().Update(entity);
             return _dbcontext.SaveChanges();
         }
+
+      
     }
 }

@@ -14,12 +14,15 @@ namespace IKEA.PL.Controllers
         private readonly IEmployeeService _employeeService;
         private readonly ILogger<EmployeeController> _logger;
         private readonly IWebHostEnvironment _environment;
+        private readonly IDepartmentService _departmentService;
 
-        public EmployeeController(IEmployeeService employeeService, ILogger<EmployeeController> logger, IWebHostEnvironment environment)
+
+        public EmployeeController(IDepartmentService departmentService,IEmployeeService employeeService, ILogger<EmployeeController> logger, IWebHostEnvironment environment)
         {
             _employeeService = employeeService;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
+            _departmentService = departmentService;
         }
         public IActionResult Index()
         {
@@ -30,11 +33,14 @@ namespace IKEA.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            ViewData["Departments"] =_departmentService.GetAllDepartments();
             return View();
         }
 
 
         [HttpPost]
+        //[ValidateAntiForgeryToken]
+
         public IActionResult Create(CreateEmployeeDto  employeeDto)
         {
             if (!ModelState.IsValid)
@@ -84,6 +90,8 @@ namespace IKEA.PL.Controllers
             var entity = _employeeService.GetEmployeeById(Id.Value);
             if (entity == null)
                 return NotFound();
+            ViewData["Departments"] = _departmentService.GetAllDepartments();
+
             return View(new EmployeeEditViewModel()
             {
 
@@ -96,6 +104,8 @@ namespace IKEA.PL.Controllers
                 Age = entity.Age,
                 PhoneNumber = entity.PhoneNumber,
                 Gender = entity.Gender,
+                DepartmentId= entity.DepartmentId,
+                
             
 
             });
@@ -103,6 +113,8 @@ namespace IKEA.PL.Controllers
 
 
         [HttpPost]
+        //[ValidateAntiForgeryToken]
+
         public IActionResult Update([FromRoute] int id, EmployeeEditViewModel employeevm)
         {
             if (!ModelState.IsValid)
@@ -147,6 +159,8 @@ namespace IKEA.PL.Controllers
 
 
         [HttpPost]
+        //[ValidateAntiForgeryToken]
+
         public IActionResult Delete(int id)
         {
             var Message = string.Empty;

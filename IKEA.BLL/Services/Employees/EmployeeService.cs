@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IKEA.BLL.Services.Employees
 {
@@ -36,6 +37,7 @@ namespace IKEA.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow,
                 PhoneNumber = entity.PhoneNumber,
                 Gender = entity.Gender,
+                DepartmentId = entity.DepartmentId,
                 //EmployeeType = entity.EmployeeType,
 
             };
@@ -54,7 +56,7 @@ namespace IKEA.BLL.Services.Employees
 
         public IEnumerable<GetAllEmployeeDto> GetAllEmployees()
         {
-            return _employeeRepository.GetAllAsQueryable().Where(a=>!a.IsDeleted).Select(entity => new GetAllEmployeeDto
+            var query= _employeeRepository.GetIQueryable().Where(a=>!a.IsDeleted).Select(entity => new GetAllEmployeeDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
@@ -66,6 +68,12 @@ namespace IKEA.BLL.Services.Employees
                 Gender = entity.Gender,
                 //EmployeeType = entity.EmployeeType,
             });
+            var employees = query.ToList();
+
+            //var firstEmployee = query.FirstOrDefault();
+
+            //var count = query.Count();
+            return employees;
         }
 
         public GetEmployeeDetailsDto GetEmployeeById(int id)
@@ -113,6 +121,7 @@ namespace IKEA.BLL.Services.Employees
                 LastModifiedOn = DateTime.UtcNow,
                 PhoneNumber = entity.PhoneNumber,
                 Gender = entity.Gender,
+                DepartmentId = entity.DepartmentId,
                 //EmployeeType = entity.EmployeeType,
 
             };
