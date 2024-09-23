@@ -157,24 +157,30 @@ namespace IKEA.PL.Controllers
 
         //[ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult Delete(int Id)
+        public IActionResult Delete(int id)
         {
+            var Message = string.Empty;
             try
             {
-                var deleted = _departmentService.DeleteDepartment(Id);
-                if (deleted)
+                var Deleted = _departmentService.DeleteDepartment(id);
+                if (Deleted)
                     return RedirectToAction("Index");
                 else
-                    ModelState.AddModelError(string.Empty, "Failed To Delete");
+                    Message = "Failed To Delete";
+
+
             }
             catch (Exception ex)
             {
+
                 _logger.LogError(ex, ex.Message);
-                var message = _environment.IsDevelopment() ? ex.Message : "Failed To Delete";
-                ModelState.AddModelError(string.Empty, message);
+
+                Message = _environment.IsDevelopment() ? ex.Message : "Failed To Delete";
+
+
             }
 
-            return RedirectToAction(nameof(Index)); 
+            return RedirectToAction(nameof(Index));
         }
 
     }
