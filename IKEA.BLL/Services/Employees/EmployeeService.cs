@@ -40,6 +40,8 @@ namespace IKEA.BLL.Services.Employees
                 DepartmentId = entity.DepartmentId,
                 //EmployeeType = entity.EmployeeType,
 
+                
+
             };
             return _employeeRepository.Add(employee);
         }

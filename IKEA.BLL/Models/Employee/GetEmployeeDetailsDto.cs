@@ -1,6 +1,7 @@
 ﻿using IKEA.DAL.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,8 @@ namespace IKEA.BLL.Models.Employee
         public DateTime CreatedOn { get; set; }
         public int LastModifiedBy { get; set; }
         public DateTime LastModifiedOn { get; set; }
+
+        [Display (Name ="Department")]
         public int? DepartmentId { get; set; }
 
     }

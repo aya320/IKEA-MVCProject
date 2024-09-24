@@ -2,6 +2,7 @@
 using IKEA.BLL.Models.Employee;
 using IKEA.BLL.Services.Department;
 using IKEA.BLL.Services.Employees;
+using IKEA.DAL.Entities.Departments;
 using IKEA.DAL.Entities.Employees;
 using IKEA.PL.ViewModels.Departments;
 using IKEA.PL.ViewModels.Employees;
@@ -41,20 +42,37 @@ namespace IKEA.PL.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
 
-        public IActionResult Create(CreateEmployeeDto  employeeDto)
+        public IActionResult Create(EmployeeEditViewModel  employeeVm)
         {
             if (!ModelState.IsValid)
-                return View(employeeDto);
+                return View(employeeVm);
 
             var Message = string.Empty;
             try
             {
-                var employee = _employeeService.CreateEmployee(employeeDto);
+                var Employee = new CreateEmployeeDto()
+                {
+                         Address = employeeVm.Address,
+                         Salary = employeeVm.Salary,
+                         Age = employeeVm.Age,
+                         Name = employeeVm.Name,
+                         DepartmentId = employeeVm.DepartmentId,
+                         Email = employeeVm.Email,
+                         Gender = employeeVm.Gender,
+                         PhoneNumber = employeeVm.PhoneNumber,
+                         HiringDate = employeeVm.HiringDate,
+                         IsActive = employeeVm.IsActive,
+                         
+
+                };
+                var employee = _employeeService.CreateEmployee(Employee);
                 if (employee > 0)
-                    return RedirectToAction("Index");
+                    TempData["Message"] = "Created Successfully";
                 else
-                    ModelState.AddModelError(string.Empty, "Failed To Add");
-                return View(employeeDto);
+                    TempData["Message"] = "Failed To Create ";
+
+
+                return RedirectToAction("Index");
 
             }
             catch (Exception ex)
@@ -65,7 +83,7 @@ namespace IKEA.PL.Controllers
 
             }
             ModelState.AddModelError(string.Empty, Message);
-            return View(employeeDto);
+            return View(employeeVm);
         }
 
         [HttpGet]
@@ -138,9 +156,16 @@ namespace IKEA.PL.Controllers
                 };
                 var EmployeeUpdate = _employeeService.UpdateEmployee(entity) > 0;
                 if (EmployeeUpdate)
-                    return RedirectToAction("Index");
+                
+                    TempData["Message"] = "Updated Successfully";
+                
+
                 else
-                    Message = "Failed To Update";
+                   
+                     TempData["Message"] = "Failed To Update ";
+
+
+                return RedirectToAction("Index");
 
 
             }

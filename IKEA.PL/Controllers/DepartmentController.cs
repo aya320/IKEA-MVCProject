@@ -129,9 +129,16 @@ namespace IKEA.PL.Controllers
                 };
                 var departmentUpdate = _departmentService.UpdateDepartment(department) > 0;
                 if (departmentUpdate)
-                    return RedirectToAction("Index");
+
+                    TempData["Message"] = "Updated Successfully";
+
+
                 else
-                    Message = "Failed To Update";
+
+                    TempData["Message"] = "Failed To Update ";
+
+
+                return RedirectToAction("Index");
 
 
             }
