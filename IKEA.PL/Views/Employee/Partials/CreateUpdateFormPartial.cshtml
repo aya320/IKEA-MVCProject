@@ -86,7 +86,7 @@
     </select>
 
     </div> *@
-    <br />
+    
     <div class="form-check">
 
         <input asp-for="IsActive" />
@@ -101,8 +101,13 @@
 
     <br />
     <div>
-        <input type="submit" value="Submit" class="btn btn-dark" style="color:lightpink " />
-        <a asp-action="Index" class="btn btn-dark " style="color:mediumpurple"> Cancel</a>
+        <input type="submit" value="Submit" class="btn btn-dark" style="color:lightpink "
+               onmouseover="this.style.backgroundColor='hotpink'; this.style.color='';"
+               onmouseout="this.style.backgroundColor='black'; this.style.color='lightpink'; " />
+
+        <a asp-action="Index" class="btn btn-dark " style="color:mediumpurple"
+           onmouseover="this.style.backgroundColor='babypink'; this.style.color='';"
+           onmouseout="this.style.backgroundColor='black'; this.style.color='mediumpurple'; "> Cancel</a>
     </div>
 
 </form>

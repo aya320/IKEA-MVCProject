@@ -11,14 +11,14 @@
 </head>
 <body>
     <header >
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom box-shadow mb-3" style="background-color:palevioletred; color:purple ; font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif ; font-size:x-large" >
+        <nav class="navbar navbar-expand-sm navbar-light border-bottom box-shadow mb-3" style="background-color: rgba(219, 112, 147, 0.8); color: purple; font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-size: x-large;">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">IKEA.PL</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" id="navbarSupportedContent">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -26,11 +26,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Department" asp-action="Index">Departments</a>
                         </li>
-
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Employees</a>
                         </li>
@@ -38,6 +36,18 @@
                 </div>
             </div>
         </nav>
+
+        <style>
+            .nav-link {
+                transition: background-color 0.3s; 
+            }
+
+                .nav-link:hover {
+                    background-color:deeppink; 
+                    color: white;
+                }
+        </style>
+
     </header>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

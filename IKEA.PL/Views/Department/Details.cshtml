@@ -67,7 +67,10 @@
 
     <div class="mt-4"> 
 
-        <a asp-action="Update" asp-route-Id="@Model.Id " class="btn " style="background-color:lightpink ;color:purple"> Update   </a>
+        <a asp-action="Update" asp-route-Id="@Model.Id " class="btn "
+        style="background-color:lightpink ;color:purple"
+           onmouseover="this.style.backgroundColor='hotpink'; this.style.color='';"
+           onmouseout="this.style.backgroundColor='lightpink'; this.style.color='purple';"> Update   </a>
         <a asp-action="Index" class="btn " style="background-color:hotpink ;color:crimson"> Back To List   </a>
       
     </div>
