@@ -17,17 +17,14 @@ namespace IKEA.DAL.Persistance.Repositories.Gereric
         {
             _dbcontext = dbContext;
         }
-        public int Add(T entity)
-        {
-            _dbcontext.Set<T>().Add(entity);
-            return _dbcontext.SaveChanges();
-        }
+        public void Add(T entity)=>  _dbcontext.Set<T>().Add(entity);
+            
 
-        public int Delete(T entity)
+        public void Delete(T entity)
         {
             entity.IsDeleted=true;
             _dbcontext.Set<T>().Update(entity);
-            return _dbcontext.SaveChanges();
+         
         }
 
         public IEnumerable<T> GetAll(bool AsNoTracking = true)
@@ -54,16 +51,13 @@ namespace IKEA.DAL.Persistance.Repositories.Gereric
 
         public T GetById(int id)
         {
-            var Result = _dbcontext.Set<T>().Find(id);
-            return Result;
+            return _dbcontext.Set<T>().Find(id);
         }
 
 
-        public int Update(T entity)
-        {
-            _dbcontext.Set<T>().Update(entity);
-            return _dbcontext.SaveChanges();
-        }
+        public void Update(T entity)=>  _dbcontext.Set<T>().Update(entity);
+         
+       
 
       
     }

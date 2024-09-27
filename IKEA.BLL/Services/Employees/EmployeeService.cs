@@ -3,6 +3,7 @@ using IKEA.DAL.Entities.Departments;
 using IKEA.DAL.Entities.Employees;
 using IKEA.DAL.Persistance.Repositories.Departments;
 using IKEA.DAL.Persistance.Repositories.Employees;
+using IKEA.DAL.Persistance.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,11 @@ namespace IKEA.BLL.Services.Employees
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly IEmployeeRepository  _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        public EmployeeService(IUnitOfWork unitOfWork)
         {
-            _employeeRepository =  employeeRepository;
+            _unitOfWork = unitOfWork;
         }
         public int CreateEmployee(CreateEmployeeDto entity)
         {
@@ -43,22 +44,24 @@ namespace IKEA.BLL.Services.Employees
                 
 
             };
-            return _employeeRepository.Add(employee);
+             _unitOfWork.EmployeeRepository.Add(employee);
+              return _unitOfWork.Compelete();
         }
 
         public bool DeleteEmployee(int id)
         {
-          var employee =_employeeRepository.GetById(id);
+            var emp = _unitOfWork.EmployeeRepository;
+          var employee = emp.GetById(id);
             if(employee is { })
-               return _employeeRepository.Delete(employee)>0;
-            else
-                return false;
+                emp.Delete(employee);
+           
+                return _unitOfWork.Compelete()>0;
 
         }
 
         public IEnumerable<GetAllEmployeeDto> GetEmployees(string Search)
         {
-            var employees = _employeeRepository.GetIQueryable().Where(a => !a.IsDeleted && (string.IsNullOrEmpty(Search) || a.Name.ToUpper().Contains(Search.ToUpper()))).Select(entity => new GetAllEmployeeDto
+            var employees = _unitOfWork.EmployeeRepository.GetIQueryable().Where(a => !a.IsDeleted && (string.IsNullOrEmpty(Search) || a.Name.ToUpper().Contains(Search.ToUpper()))).Select(entity => new GetAllEmployeeDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
@@ -80,7 +83,7 @@ namespace IKEA.BLL.Services.Employees
 
         public GetEmployeeDetailsDto GetEmployeeById(int id)
         {
-            var entity = _employeeRepository.GetById(id);
+            var entity = _unitOfWork.EmployeeRepository.GetById(id);
 
             if (entity is { })
                 return new GetEmployeeDetailsDto()
@@ -127,7 +130,8 @@ namespace IKEA.BLL.Services.Employees
                 //EmployeeType = entity.EmployeeType,
 
             };
-            return _employeeRepository.Update(employee);
+             _unitOfWork.EmployeeRepository.Update(employee);
+            return _unitOfWork.Compelete();
         }
     }
 }

@@ -3,11 +3,15 @@
     ViewData["Title"] = "Create";
     ViewBag.Action = "Create";
 }
-
-
-<div class="row justify-content-center align-items-center flex-column" >
+<div class="row justify-content-center align-items-center flex-column">
     <h1 class="col-6 my-4" style="color:deeppink"> Create New Department</h1>
+    <div asp-validation-summary="ModelOnly"> </div>
+
+<form asp-action="Create" method="post" class="col-6; mb-2">
+
 
     <partial name="Partials/CreateUpdateFormPartial" />
+</form>
 </div>
+
 <partial name="_ValidationScriptsPartial" />
