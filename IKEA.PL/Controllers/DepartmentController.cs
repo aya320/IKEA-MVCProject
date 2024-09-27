@@ -1,4 +1,5 @@
-﻿using IKEA.BLL.Models.Department;
+﻿using AutoMapper;
+using IKEA.BLL.Models.Department;
 using IKEA.BLL.Services.Department;
 using IKEA.DAL.Entities.Departments;
 using IKEA.PL.ViewModels.Departments;
@@ -12,12 +13,14 @@ namespace IKEA.PL.Controllers
         private readonly IDepartmentService _departmentService;
         private readonly ILogger<DepartmentController> _logger;
         private readonly IWebHostEnvironment _environment;
+        private readonly IMapper _mapper;
 
-        public DepartmentController(IDepartmentService departmentService, ILogger<DepartmentController> logger, IWebHostEnvironment environment)
+        public DepartmentController(IDepartmentService departmentService, ILogger<DepartmentController> logger, IWebHostEnvironment environment, IMapper mapper )
         {
             _departmentService = departmentService;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
+           _mapper = mapper;
         }
 
         [HttpGet]
@@ -48,13 +51,14 @@ namespace IKEA.PL.Controllers
             var Message = string.Empty;
             try
             {
-                var Created = new CreateDepartmentDto()
-                {
-                    Code = departmentvm.Code,
-                    Name = departmentvm.Name,
-                    CreationDate = departmentvm.CreationDate,
-                    Description = departmentvm.Description,
-                };
+                //var Created = new CreateDepartmentDto()
+                //{
+                //    Code = departmentvm.Code,
+                //    Name = departmentvm.Name,
+                //    CreationDate = departmentvm.CreationDate,
+                //    Description = departmentvm.Description,
+                //};
+                var Created = _mapper.Map<CreateDepartmentDto>(departmentvm);
                 var department = _departmentService.CreateDepartment(Created);
                 if (department > 0)
                     TempData["Message"] = "Created Successfully";  
@@ -99,14 +103,9 @@ namespace IKEA.PL.Controllers
             var department = _departmentService.GetDepartmentById(Id.Value);
             if (department == null)
                 return NotFound();
-            return View(new DepartmentEditViewModel()
-            {
-                Code = department.Code,
-                Name = department.Name,
-                Description = department.Description,
-                CreationDate = department.CreationDate,
 
-            });
+            var departmentvm=_mapper.Map<GetDepartmentDetailsDto,DepartmentEditViewModel>(department);
+            return View(departmentvm);
         }
 
         [HttpPost]
@@ -119,14 +118,17 @@ namespace IKEA.PL.Controllers
             var Message = string.Empty;
             try
             {
-                var department = new UpdateDepartmentDto()
-                {
-                    Id = id,
-                    Code = departmentvm.Code,
-                    Name = departmentvm.Name,
-                    Description = departmentvm.Description,
-                    CreationDate = departmentvm.CreationDate,
-                };
+                //var department = new UpdateDepartmentDto()
+                //{
+                //    Id = id,
+                //    Code = departmentvm.Code,
+                //    Name = departmentvm.Name,
+                //    Description = departmentvm.Description,
+                //    CreationDate = departmentvm.CreationDate,
+                //};
+
+                var department =_mapper.Map<UpdateDepartmentDto>(departmentvm);
+
                 var departmentUpdate = _departmentService.UpdateDepartment(department) > 0;
                 if (departmentUpdate)
 

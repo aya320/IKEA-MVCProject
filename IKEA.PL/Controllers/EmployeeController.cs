@@ -1,4 +1,5 @@
-﻿using IKEA.BLL.Models.Department;
+﻿using AutoMapper;
+using IKEA.BLL.Models.Department;
 using IKEA.BLL.Models.Employee;
 using IKEA.BLL.Services.Department;
 using IKEA.BLL.Services.Employees;
@@ -16,14 +17,17 @@ namespace IKEA.PL.Controllers
         private readonly ILogger<EmployeeController> _logger;
         private readonly IWebHostEnvironment _environment;
         private readonly IDepartmentService _departmentService;
+        private readonly IMapper _mapper;
 
 
-        public EmployeeController(IDepartmentService departmentService,IEmployeeService employeeService, ILogger<EmployeeController> logger, IWebHostEnvironment environment)
+
+        public EmployeeController(IDepartmentService departmentService, IEmployeeService employeeService, ILogger<EmployeeController> logger, IWebHostEnvironment environment, IMapper mapper )
         {
             _employeeService = employeeService;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
             _departmentService = departmentService;
+            _mapper = mapper;
         }
         public IActionResult Index(string Search)
         {
@@ -50,21 +54,23 @@ namespace IKEA.PL.Controllers
             var Message = string.Empty;
             try
             {
-                var Employee = new CreateEmployeeDto()
-                {
-                         Address = employeeVm.Address,
-                         Salary = employeeVm.Salary,
-                         Age = employeeVm.Age,
-                         Name = employeeVm.Name,
-                         DepartmentId = employeeVm.DepartmentId,
-                         Email = employeeVm.Email,
-                         Gender = employeeVm.Gender,
-                         PhoneNumber = employeeVm.PhoneNumber,
-                         HiringDate = employeeVm.HiringDate,
-                         IsActive = employeeVm.IsActive,
+                //var Employee = new CreateEmployeeDto()
+                //{
+                //         Address = employeeVm.Address,
+                //         Salary = employeeVm.Salary,
+                //         Age = employeeVm.Age,
+                //         Name = employeeVm.Name,
+                //         DepartmentId = employeeVm.DepartmentId,
+                //         Email = employeeVm.Email,
+                //         Gender = employeeVm.Gender,
+                //         PhoneNumber = employeeVm.PhoneNumber,
+                //         HiringDate = employeeVm.HiringDate,
+                //         IsActive = employeeVm.IsActive,
                          
 
-                };
+                //};
+
+                var Employee =_mapper.Map<CreateEmployeeDto>(employeeVm);
                 var employee = _employeeService.CreateEmployee(Employee);
                 if (employee > 0)
                     TempData["Message"] = "Created Successfully";
@@ -110,23 +116,8 @@ namespace IKEA.PL.Controllers
                 return NotFound();
             ViewData["Departments"] = _departmentService.GetAllDepartments();
 
-            return View(new EmployeeEditViewModel()
-            {
-
-                Name = entity.Name,
-                Salary = entity.Salary,
-                IsActive = entity.IsActive,
-                HiringDate = entity.HiringDate,
-                Address = entity.Address,
-                Email = entity.Email,
-                Age = entity.Age,
-                PhoneNumber = entity.PhoneNumber,
-                Gender = entity.Gender,
-                DepartmentId= entity.DepartmentId,
-                
-            
-
-            });
+            var Employee =_mapper.Map<GetEmployeeDetailsDto,EmployeeEditViewModel>(entity);
+            return View(Employee);
         }
 
 
@@ -140,20 +131,21 @@ namespace IKEA.PL.Controllers
             var Message = string.Empty;
             try
             {
-                var entity = new UpdateEmployeeDto()
-                {
-                    Id = id,
-                    Name = employeevm.Name,
-                    Salary = employeevm.Salary,
-                    IsActive = employeevm.IsActive,
-                    Address = employeevm.Address,
-                    Age= employeevm.Age,
-                    PhoneNumber = employeevm.PhoneNumber,
-                    Gender = employeevm.Gender,
-                    Email = employeevm.Email,
-                    HiringDate= employeevm.HiringDate,
+                //var entity = new UpdateEmployeeDto()
+                //{
+                //    Id = id,
+                //    Name = employeevm.Name,
+                //    Salary = employeevm.Salary,
+                //    IsActive = employeevm.IsActive,
+                //    Address = employeevm.Address,
+                //    Age= employeevm.Age,
+                //    PhoneNumber = employeevm.PhoneNumber,
+                //    Gender = employeevm.Gender,
+                //    Email = employeevm.Email,
+                //    HiringDate= employeevm.HiringDate,
                    
-                };
+                //};
+                var entity=_mapper.Map<UpdateEmployeeDto>(employeevm);
                 var EmployeeUpdate = _employeeService.UpdateEmployee(entity) > 0;
                 if (EmployeeUpdate)
                 

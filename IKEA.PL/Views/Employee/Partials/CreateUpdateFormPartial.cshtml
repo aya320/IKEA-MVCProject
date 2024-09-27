@@ -5,7 +5,7 @@
     var Departments = new SelectList(ViewData["Departments"] as IEnumerable<GetAllDepartmentDto>, nameof(GetAllDepartmentDto.Id), nameof(GetAllDepartmentDto.Name));
 }
 
-<form asp-action="@ViewBag.Action" method="post" class="col-5">
+<form asp-action="@ViewBag.Action" asp-route_Id="@Model.Id"  method="post" class="col-5">
     <div asp-validation-summary="ModelOnly"> </div>
     <div class="form-group">
         <label class="form-label" asp-for="Name">   </label>
