@@ -10,7 +10,7 @@ namespace IKEA.BLL.Services.Employees
 {
     public interface IEmployeeService
     {
-        IEnumerable<GetAllEmployeeDto> GetAllEmployees();
+        IEnumerable<GetAllEmployeeDto> GetEmployees(string Search);
         GetEmployeeDetailsDto GetEmployeeById(int id);
         int CreateEmployee(CreateEmployeeDto entity);
         int UpdateEmployee(UpdateEmployeeDto entity);

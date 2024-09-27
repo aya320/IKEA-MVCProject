@@ -56,9 +56,9 @@ namespace IKEA.BLL.Services.Employees
 
         }
 
-        public IEnumerable<GetAllEmployeeDto> GetAllEmployees()
+        public IEnumerable<GetAllEmployeeDto> GetEmployees(string Search)
         {
-            var query= _employeeRepository.GetIQueryable().Where(a=>!a.IsDeleted).Select(entity => new GetAllEmployeeDto
+            var employees = _employeeRepository.GetIQueryable().Where(a => !a.IsDeleted && (string.IsNullOrEmpty(Search) || a.Name.ToUpper().Contains(Search.ToUpper()))).Select(entity => new GetAllEmployeeDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
@@ -69,8 +69,8 @@ namespace IKEA.BLL.Services.Employees
                 Age = entity.Age,
                 Gender = entity.Gender,
                 //EmployeeType = entity.EmployeeType,
-            });
-            var employees = query.ToList();
+            }).ToList();
+           
 
             //var firstEmployee = query.FirstOrDefault();
 

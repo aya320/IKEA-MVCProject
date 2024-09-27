@@ -15,7 +15,32 @@ style="background-color: skyblue ;color:royalblue ;font-size:xx-large;font-famil
     
    Add New Employee
 </a>
+<br />
 
+✓<form asp-action="Index" method="get" class="mt-5 row justify-content-center align-items-center">
+
+  <div class="row col-8 offset-1">
+  
+      <div class="col-8">
+  
+  
+              <input type="text" name="Search" class="form-control" id="searchInp" placeholder="Search By Name"/>
+  
+      </div>
+  
+      <div class="col-4">
+            <input type="submit" value="Search"
+                   class="btn"
+                   style="background-color: palegreen; color: navy; font-size: large; font-family: 'Bookman Old Style'; transition: background-color 0.3s ease;"
+                   onmouseover="this.style.backgroundColor='lightcyan'; this.style.color='navy';"
+                   onmouseout="this.style.backgroundColor='palegreen'; this.style.color='navy';" />
+
+  
+       </div>
+  
+  </div>
+
+</form>
 <br />
 @if (!string.IsNullOrEmpty(TempData["Message"] as string))
 {

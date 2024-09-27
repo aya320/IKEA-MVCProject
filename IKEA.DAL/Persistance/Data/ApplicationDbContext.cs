@@ -16,10 +16,16 @@ namespace IKEA.DAL.Persistance.Data
         {
             
         }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.EnableSensitiveDataLogging();
+     
+        //}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly()) ;
-               
+           
+
         }
 
      

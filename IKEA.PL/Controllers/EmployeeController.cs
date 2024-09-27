@@ -25,9 +25,9 @@ namespace IKEA.PL.Controllers
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
             _departmentService = departmentService;
         }
-        public IActionResult Index()
+        public IActionResult Index(string Search)
         {
-            var employees=_employeeService.GetAllEmployees();
+            var employees=_employeeService.GetEmployees(Search);
             return View(employees);
         }
 
