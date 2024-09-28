@@ -204,5 +204,11 @@ namespace IKEA.PL.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult Search(string Search)
+        {
+            var employees = _employeeService.GetEmployees(Search);
+            return PartialView("Partials/Search" , employees);
+        }
+
     }
 }

@@ -18,14 +18,14 @@ style="background-color: skyblue ;color:royalblue ;font-size:xx-large;font-famil
 <br />
 <div asp-validation-summary="ModelOnly"> </div>
 
-✓<form asp-action="Index" method="get" class="mt-5 row justify-content-center align-items-center">
+✓<form asp-action="Index" class="mt-5 row justify-content-center align-items-center">
 
   <div class="row col-8 offset-1">
   
       <div class="col-8">
-  
-  
-              <input type="text" name="Search" class="form-control" id="searchInp" placeholder="Search By Name"/>
+
+
+            <input type="text" name="searchInp" class="form-control" id="searchInp" placeholder="Search By Name" />
   
       </div>
   
@@ -149,3 +149,26 @@ else
         <h3> NO Employee Here </h3>
     </div>
 }
+
+<script>
+    $(document).ready(function () {
+        const searchBar = $('#searchInp');
+        const table = $('table');
+
+        searchBar.on('keyup', function (event) {
+            var searchValue = searchBar.val();
+
+            $.ajax({
+                url: '/Employee/Search',
+                type: 'Get',
+                data: { Search: searchValue },
+                success: function (result) {
+                    table.html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
