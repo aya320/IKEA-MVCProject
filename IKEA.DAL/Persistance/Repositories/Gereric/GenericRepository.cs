@@ -27,14 +27,14 @@ namespace IKEA.DAL.Persistance.Repositories.Gereric
          
         }
 
-        public IEnumerable<T> GetAll(bool AsNoTracking = true)
+        public async Task< IEnumerable<T>> GetAllAsync (bool AsNoTracking = true)
         {
             if (AsNoTracking)
             {
-                return _dbcontext.Set<T>().Where(a=>!a.IsDeleted).AsNoTracking().ToList();
+                return await _dbcontext.Set<T>().Where(a=>!a.IsDeleted).AsNoTracking().ToListAsync();
             }
             else
-                return _dbcontext.Set<T>().Where(a => !a.IsDeleted).ToList();
+                return await _dbcontext.Set<T>().Where(a => !a.IsDeleted).ToListAsync();
 
 
         }
@@ -49,9 +49,9 @@ namespace IKEA.DAL.Persistance.Repositories.Gereric
             throw new NotImplementedException();
         }
 
-        public T GetById(int id)
+        public async Task< T> GetByIdAsync(int id)
         {
-            return _dbcontext.Set<T>().Find(id);
+            return await _dbcontext.Set<T>().FindAsync(id);
         }
 
 

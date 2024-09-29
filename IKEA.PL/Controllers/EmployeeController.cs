@@ -8,6 +8,7 @@ using IKEA.DAL.Entities.Employees;
 using IKEA.PL.ViewModels.Departments;
 using IKEA.PL.ViewModels.Employees;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IKEA.PL.Controllers
 {
@@ -29,16 +30,20 @@ namespace IKEA.PL.Controllers
             _departmentService = departmentService;
             _mapper = mapper;
         }
-        public IActionResult Index(string Search)
+        public async Task< IActionResult> Index(string Search)
         {
-            var employees=_employeeService.GetEmployees(Search);
+            var employees= await _employeeService.GetEmployeesAsync(Search);
             return View(employees);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task< IActionResult> Create()
         {
-            ViewData["Departments"] =_departmentService.GetAllDepartments();
+
+            var Departments = await _departmentService.GetAllDepartmentsAsync();
+         
+
+            ViewData["Departments"] = new SelectList(Departments, "Id", "Name");
             return View();
         }
 
@@ -46,7 +51,7 @@ namespace IKEA.PL.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
 
-        public IActionResult Create(EmployeeEditViewModel  employeeVm)
+        public async Task< IActionResult> Create(EmployeeEditViewModel  employeeVm)
         {
             if (!ModelState.IsValid)
                 return View(employeeVm);
@@ -71,7 +76,7 @@ namespace IKEA.PL.Controllers
                 //};
 
                 var Employee =_mapper.Map<CreateEmployeeDto>(employeeVm);
-                var employee = _employeeService.CreateEmployee(Employee);
+                var employee = await _employeeService.CreateEmployeeAsync(Employee);
                 if (employee > 0)
                     TempData["Message"] = "Created Successfully";
                 else
@@ -93,12 +98,12 @@ namespace IKEA.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int? Id)
+        public async Task< IActionResult> Details(int? Id)
         {
             if (Id == null)
                 return BadRequest();
 
-            var employee = _employeeService.GetEmployeeById(Id.Value);
+            var employee = await _employeeService.GetEmployeeByIdAsync(Id.Value);
 
             if (employee == null)
                 return NotFound();
@@ -107,14 +112,14 @@ namespace IKEA.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Update(int? Id)
+        public async Task< IActionResult >Update(int? Id)
         {
             if (Id == null)
                 return BadRequest();
-            var entity = _employeeService.GetEmployeeById(Id.Value);
+            var entity =  await _employeeService.GetEmployeeByIdAsync(Id.Value);
             if (entity == null)
                 return NotFound();
-            ViewData["Departments"] = _departmentService.GetAllDepartments();
+            ViewData["Departments"] = _departmentService.GetAllDepartmentsAsync();
 
             var Employee =_mapper.Map<GetEmployeeDetailsDto,EmployeeEditViewModel>(entity);
             return View(Employee);
@@ -124,7 +129,7 @@ namespace IKEA.PL.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
 
-        public IActionResult Update([FromRoute] int id, EmployeeEditViewModel employeevm)
+        public async Task< IActionResult >Update([FromRoute] int id, EmployeeEditViewModel employeevm)
         {
             if (!ModelState.IsValid)
                 return View(employeevm);
@@ -146,7 +151,7 @@ namespace IKEA.PL.Controllers
                    
                 //};
                 var entity=_mapper.Map<UpdateEmployeeDto>(employeevm);
-                var EmployeeUpdate = _employeeService.UpdateEmployee(entity) > 0;
+                var EmployeeUpdate =await _employeeService.UpdateEmployeeAsync(entity) > 0;
                 if (EmployeeUpdate)
                 
                     TempData["Message"] = "Updated Successfully";
@@ -178,12 +183,12 @@ namespace IKEA.PL.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
 
-        public IActionResult Delete(int id)
+        public async Task< IActionResult >Delete(int id)
         {
             var Message = string.Empty;
             try
             {
-                var Deleted = _employeeService.DeleteEmployee(id);
+                var Deleted = await _employeeService.DeleteEmployeeAsync(id);
                 if (Deleted)
                     return RedirectToAction("Index");
                 else
@@ -204,9 +209,9 @@ namespace IKEA.PL.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Search(string Search)
+        public async Task< IActionResult> Search(string Search)
         {
-            var employees = _employeeService.GetEmployees(Search);
+            var employees =await _employeeService.GetEmployeesAsync(Search);
             return PartialView("Partials/Search" , employees);
         }
 

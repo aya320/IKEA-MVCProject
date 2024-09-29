@@ -1,10 +1,12 @@
-﻿
+﻿@using IKEA.BLL.Services.Department
+@* @inject DepartmentService departmentsevice *@
 @model EmployeeEditViewModel 
 @{
     ViewData["Title"] = "Create";
-    var Departments = new SelectList(ViewData["Departments"] as IEnumerable<GetAllDepartmentDto>, nameof(GetAllDepartmentDto.Id), nameof(GetAllDepartmentDto.Name));
+    // var Departments = new SelectList(await departmentsevice.GetAllDepartmentsAsync(), nameof(GetAllDepartmentDto.Id), nameof(GetAllDepartmentDto.Name));
+    var Departments = ViewData["Department"] as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>());
+
 }
-<form asp-action="@ViewBag.Action" method="post" class="col-5" enctype="multipart/form-data">
 
 <div class="row justify-content-center align-items-center flex-column">
     <div asp-validation-summary="ModelOnly"> </div>
@@ -118,4 +120,4 @@
            onmouseover="this.style.backgroundColor='babypink'; this.style.color='';"
            onmouseout="this.style.backgroundColor='black'; this.style.color='mediumpurple'; "> Cancel</a>
     </div>
-    </form>
+  

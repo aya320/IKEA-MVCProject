@@ -1,8 +1,8 @@
 ﻿@model EmployeeEditViewModel
 @{
    
-    var Departments = new SelectList(ViewData["Departments"] as IEnumerable<GetAllDepartmentDto>, nameof(GetAllDepartmentDto.Id), nameof(GetAllDepartmentDto.Name));
-    ViewBag.Action = "Update";
+    // var Departments = new SelectList(ViewData["Departments"] as IEnumerable<GetAllDepartmentDto>, nameof(GetAllDepartmentDto.Id), nameof(GetAllDepartmentDto.Name));
+    // ViewBag.Action = "Update";
 
 }
 <div class="row justify-content-center align-items-center flex-column">
@@ -10,10 +10,11 @@
 
 
 
+    <form asp-action="Update" method="post" class="col-5" enctype="multipart/form-data">
 
 
     <partial name="Partials/CreateUpdateFormPartial" />
-    
+    </form>
 
 </div>
 
