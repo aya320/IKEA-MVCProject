@@ -118,6 +118,7 @@ namespace IKEA.BLL.Services.Employees
                     LastModifiedOn = entity.LastModifiedOn,
                     DepartmentId = entity.Department?.Id,
                     Department = entity.Department?.Name,
+                    Image= entity.Image,
 
                     //EmployeeType = entity.EmployeeType,
                 };
