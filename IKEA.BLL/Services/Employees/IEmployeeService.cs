@@ -1,10 +1,4 @@
-﻿using IKEA.BLL.Models.Department;
-using IKEA.BLL.Models.Employee;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IKEA.BLL.Models.Employee;
 
 namespace IKEA.BLL.Services.Employees
 {

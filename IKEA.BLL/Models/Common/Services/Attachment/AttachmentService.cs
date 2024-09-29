@@ -12,7 +12,7 @@ namespace IKEA.BLL.Models.Common.Services.Attachment
         private List<string> _AllowedExtensions = new() { ".png", ".jpg", ".jpeg" };
         private const int _AllowedMaxSize = 2097152;
 
-        public async Task< string> UploadAsync(IFormFile file, string FolderName)
+        public async Task< string?> UploadAsync(IFormFile file, string FolderName)
         {
             var extension = Path.GetExtension(file.FileName);
 
@@ -26,7 +26,7 @@ namespace IKEA.BLL.Models.Common.Services.Attachment
                 Directory.CreateDirectory(FolderPath);
             var FileName=$"{Guid.NewGuid()}{extension}";
             var FilePath =Path.Combine(FolderPath, FileName);
-            var FileStream = new FileStream(FilePath, FileMode.Create);
+           using var FileStream = new FileStream(FilePath, FileMode.Create);
            await file.CopyToAsync(FileStream);
 
             return   FileName;

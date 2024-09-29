@@ -1,17 +1,8 @@
 ﻿using IKEA.BLL.Models.Common.Services.Attachment;
 using IKEA.BLL.Models.Employee;
-using IKEA.DAL.Entities.Departments;
 using IKEA.DAL.Entities.Employees;
-using IKEA.DAL.Persistance.Repositories.Departments;
-using IKEA.DAL.Persistance.Repositories.Employees;
 using IKEA.DAL.Persistance.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace IKEA.BLL.Services.Employees
 {
@@ -150,7 +141,7 @@ namespace IKEA.BLL.Services.Employees
 
             };
 
-            if (entity is not null)
+            if (entity.Image is not null)
                 employee.Image = await _attachmentService.UploadAsync(entity.Image, "Images");
 
             _unitOfWork.EmployeeRepository.Update(employee);

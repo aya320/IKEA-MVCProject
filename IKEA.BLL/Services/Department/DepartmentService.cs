@@ -1,12 +1,6 @@
 ﻿using IKEA.BLL.Models.Department;
-using IKEA.DAL.Persistance.Repositories.Departments;
 using IKEA.DAL.Persistance.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IKEA.BLL.Services.Department
 {
