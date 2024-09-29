@@ -1,3 +1,4 @@
+using IKEA.BLL.Models.Common.Services.Attachment;
 using IKEA.BLL.Services.Department;
 using IKEA.BLL.Services.Employees;
 using IKEA.DAL.Persistance.Data;
@@ -21,7 +22,7 @@ namespace IKEA.PL
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
 
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
             //builder.Services.AddScoped<IDepartmentRepository , DepartmentRepository>();
@@ -31,6 +32,7 @@ namespace IKEA.PL
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddTransient<IAttachmentService,AttachmentService >();
             builder.Services.AddAutoMapper(m=>m.AddProfile(new MappingProfile()));
 
 

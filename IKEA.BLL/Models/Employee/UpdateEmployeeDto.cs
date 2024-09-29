@@ -39,5 +39,7 @@ namespace IKEA.BLL.Models.Employee
 
         public bool IsActive { get; set; }
         public int? DepartmentId { get; set; }
+        public string? Image { get; set; }
+
     }
 }

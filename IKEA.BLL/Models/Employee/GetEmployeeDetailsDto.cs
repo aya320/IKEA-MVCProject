@@ -31,6 +31,8 @@ namespace IKEA.BLL.Models.Employee
 
         [Display (Name ="Department")]
         public int? DepartmentId { get; set; }
+        public string? Department { get; internal set; }
+        public string? Image { get; set; }
 
     }
 }

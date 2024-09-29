@@ -1,9 +1,11 @@
-﻿using IKEA.BLL.Models.Employee;
+﻿using IKEA.BLL.Models.Common.Services.Attachment;
+using IKEA.BLL.Models.Employee;
 using IKEA.DAL.Entities.Departments;
 using IKEA.DAL.Entities.Employees;
 using IKEA.DAL.Persistance.Repositories.Departments;
 using IKEA.DAL.Persistance.Repositories.Employees;
 using IKEA.DAL.Persistance.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +18,13 @@ namespace IKEA.BLL.Services.Employees
     public class EmployeeService : IEmployeeService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAttachmentService _attachmentService;
 
-        public EmployeeService(IUnitOfWork unitOfWork)
+
+        public EmployeeService(IAttachmentService attachmentService, IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+            _attachmentService = attachmentService;
         }
         public int CreateEmployee(CreateEmployeeDto entity)
         {
@@ -39,12 +44,17 @@ namespace IKEA.BLL.Services.Employees
                 PhoneNumber = entity.PhoneNumber,
                 Gender = entity.Gender,
                 DepartmentId = entity.DepartmentId,
+
                 //EmployeeType = entity.EmployeeType,
 
-                
+
+
 
             };
-             _unitOfWork.EmployeeRepository.Add(employee);
+
+            if (entity is not null)
+                employee.Image = _attachmentService.Upload(entity.Image, "Images");
+            _unitOfWork.EmployeeRepository.Add(employee);
               return _unitOfWork.Compelete();
         }
 
@@ -61,7 +71,7 @@ namespace IKEA.BLL.Services.Employees
 
         public IEnumerable<GetAllEmployeeDto> GetEmployees(string Search)
         {
-            var employees = _unitOfWork.EmployeeRepository.GetIQueryable().Where(a => !a.IsDeleted && (string.IsNullOrEmpty(Search) || a.Name.ToUpper().Contains(Search.ToUpper()))).Select(entity => new GetAllEmployeeDto
+            var employees = _unitOfWork.EmployeeRepository.GetIQueryable().Where(a => !a.IsDeleted && (string.IsNullOrEmpty(Search) || a.Name.ToUpper().Contains(Search.ToUpper()))).Include(x=>x.Department).Select(entity => new GetAllEmployeeDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
@@ -71,6 +81,9 @@ namespace IKEA.BLL.Services.Employees
                 Email = entity.Email,
                 Age = entity.Age,
                 Gender = entity.Gender,
+                DepartmentId=entity.Department.Id,
+                Department = entity.Department.Name ,
+                
                 //EmployeeType = entity.EmployeeType,
             }).ToList();
            
@@ -103,6 +116,9 @@ namespace IKEA.BLL.Services.Employees
                     CreatedBy = entity.CreatedBy,
                     CreatedOn = entity.CreatedOn,
                     LastModifiedOn = entity.LastModifiedOn,
+                    DepartmentId = entity.Department?.Id,
+                    Department = entity.Department?.Name,
+
                     //EmployeeType = entity.EmployeeType,
                 };
             else

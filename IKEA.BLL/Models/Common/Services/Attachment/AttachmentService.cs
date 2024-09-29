@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IKEA.BLL.Models.Common.Services.Attachment
 {
-    internal class AttachmentService : IAttachmentService
+    public class AttachmentService : IAttachmentService
     {
         private List<string> _AllowedExtensions = new() { ".png", ".jpg", ".jpeg" };
         private const int _AllowedMaxSize = 2097152;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IKEA.BLL.Models.Common.Services.Attachment
 {
-    internal interface IAttachmentService
+    public interface IAttachmentService
     {
         string? Upload(IFormFile file ,string FolderName);
         bool Delete(string FilePath);

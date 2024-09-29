@@ -21,5 +21,9 @@ namespace IKEA.BLL.Models.Employee
         public Gender Gender { get; set; }
         //public EmployeeType EmployeeType { get; set; }
         public bool IsActive { get; set; }
+        public string? Department { get;  set; }
+        public int? DepartmentId { get; set; }
+        public string? Image { get; set; }
+
     }
 }
