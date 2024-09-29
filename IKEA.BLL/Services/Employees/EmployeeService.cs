@@ -147,7 +147,11 @@ namespace IKEA.BLL.Services.Employees
                 //EmployeeType = entity.EmployeeType,
 
             };
-             _unitOfWork.EmployeeRepository.Update(employee);
+
+            if (entity is not null)
+                employee.Image = _attachmentService.Upload(entity.Image, "Images");
+
+            _unitOfWork.EmployeeRepository.Update(employee);
             return _unitOfWork.Compelete();
         }
     }

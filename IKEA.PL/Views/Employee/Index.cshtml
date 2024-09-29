@@ -15,7 +15,7 @@ style="background-color: skyblue ;color:royalblue ;font-size:xx-large;font-famil
     
    Add New Employee
 </a>
-<br />
+
 <div asp-validation-summary="ModelOnly"> </div>
 
 ✓<form asp-action="Index" class="mt-5 row justify-content-center align-items-center">
@@ -42,7 +42,7 @@ style="background-color: skyblue ;color:royalblue ;font-size:xx-large;font-famil
   </div>
 
 </form>
-<br />
+
 @if (!string.IsNullOrEmpty(TempData["Message"] as string))
 {
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">

@@ -18,7 +18,7 @@ namespace IKEA.PL.Mapping
 
             #region  Department
             CreateMap<EmployeeEditViewModel, CreateEmployeeDto>();
-            CreateMap<GetEmployeeDetailsDto, EmployeeEditViewModel>();
+            CreateMap<GetEmployeeDetailsDto, EmployeeEditViewModel>().ForMember(dest => dest.Image, opt => opt.Ignore()); ;
             CreateMap<EmployeeEditViewModel, UpdateEmployeeDto>();
             #endregion
 
