@@ -1,5 +1,7 @@
 ﻿using IKEA.DAL.Entities.Departments;
 using IKEA.DAL.Entities.Employees;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace IKEA.DAL.Persistance.Data
 {
-    public class ApplicationDbContext :DbContext 
+    public class ApplicationDbContext :IdentityDbContext 
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext>options):base(options)
         {
@@ -23,6 +25,7 @@ namespace IKEA.DAL.Persistance.Data
         //}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly()) ;
            
 
@@ -31,6 +34,9 @@ namespace IKEA.DAL.Persistance.Data
      
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee>  Employees { get; set; }
+
+       
+
 
     }
 }
