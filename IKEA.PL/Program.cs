@@ -1,11 +1,13 @@
 using IKEA.BLL.Models.Common.Services.Attachment;
 using IKEA.BLL.Services.Department;
 using IKEA.BLL.Services.Employees;
+using IKEA.DAL.Entities.Identity;
 using IKEA.DAL.Persistance.Data;
 using IKEA.DAL.Persistance.Repositories.Departments;
 using IKEA.DAL.Persistance.Repositories.Employees;
 using IKEA.DAL.Persistance.UnitOfWork;
 using IKEA.PL.Mapping;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -36,7 +38,31 @@ namespace IKEA.PL
             builder.Services.AddAutoMapper(m=>m.AddProfile(new MappingProfile()));
 
 
-            var app = builder.Build();
+			builder.Services.AddIdentity<ApplicationUser, IdentityRole>((options) =>
+
+			{
+
+				options.Password.RequiredLength = 5;
+
+				options.Password.RequireDigit = true;
+
+				options.Password.RequireUppercase = false;
+
+				options.Password.RequireLowercase = true;
+
+				options.User.RequireUniqueEmail = true;
+
+				options.Lockout.AllowedForNewUsers = true;
+
+				options.Lockout.MaxFailedAccessAttempts = 5;
+
+				options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(5);
+
+ 
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
