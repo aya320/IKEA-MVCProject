@@ -1,11 +1,14 @@
-﻿using IKEA.BLL.Models.Department;
+﻿using AutoMapper;
+using IKEA.BLL.Models.Department;
 using IKEA.BLL.Models.Employee;
 using IKEA.BLL.Services.Department;
 using IKEA.BLL.Services.Employees;
+using IKEA.DAL.Entities.Departments;
 using IKEA.DAL.Entities.Employees;
 using IKEA.PL.ViewModels.Departments;
 using IKEA.PL.ViewModels.Employees;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IKEA.PL.Controllers
 {
@@ -15,25 +18,32 @@ namespace IKEA.PL.Controllers
         private readonly ILogger<EmployeeController> _logger;
         private readonly IWebHostEnvironment _environment;
         private readonly IDepartmentService _departmentService;
+        private readonly IMapper _mapper;
 
 
-        public EmployeeController(IDepartmentService departmentService,IEmployeeService employeeService, ILogger<EmployeeController> logger, IWebHostEnvironment environment)
+
+        public EmployeeController(IDepartmentService departmentService, IEmployeeService employeeService, ILogger<EmployeeController> logger, IWebHostEnvironment environment, IMapper mapper )
         {
             _employeeService = employeeService;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
             _departmentService = departmentService;
+            _mapper = mapper;
         }
-        public IActionResult Index()
+        public async Task< IActionResult> Index(string Search)
         {
-            var employees=_employeeService.GetAllEmployees();
+            var employees= await _employeeService.GetEmployeesAsync(Search);
             return View(employees);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task< IActionResult> Create()
         {
-            ViewData["Departments"] =_departmentService.GetAllDepartments();
+
+            var Departments = await _departmentService.GetAllDepartmentsAsync();
+         
+
+            ViewData["Departments"] = new SelectList(Departments, "Id", "Name");
             return View();
         }
 
@@ -41,20 +51,39 @@ namespace IKEA.PL.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
 
-        public IActionResult Create(CreateEmployeeDto  employeeDto)
+        public async Task< IActionResult> Create(EmployeeEditViewModel  employeeVm)
         {
             if (!ModelState.IsValid)
-                return View(employeeDto);
+                return View(employeeVm);
 
             var Message = string.Empty;
             try
             {
-                var employee = _employeeService.CreateEmployee(employeeDto);
+                //var Employee = new CreateEmployeeDto()
+                //{
+                //         Address = employeeVm.Address,
+                //         Salary = employeeVm.Salary,
+                //         Age = employeeVm.Age,
+                //         Name = employeeVm.Name,
+                //         DepartmentId = employeeVm.DepartmentId,
+                //         Email = employeeVm.Email,
+                //         Gender = employeeVm.Gender,
+                //         PhoneNumber = employeeVm.PhoneNumber,
+                //         HiringDate = employeeVm.HiringDate,
+                //         IsActive = employeeVm.IsActive,
+                         
+
+                //};
+
+                var Employee =_mapper.Map<CreateEmployeeDto>(employeeVm);
+                var employee = await _employeeService.CreateEmployeeAsync(Employee);
                 if (employee > 0)
-                    return RedirectToAction("Index");
+                    TempData["Message"] = "Created Successfully";
                 else
-                    ModelState.AddModelError(string.Empty, "Failed To Add");
-                return View(employeeDto);
+                    TempData["Message"] = "Failed To Create ";
+
+
+                return RedirectToAction("Index");
 
             }
             catch (Exception ex)
@@ -65,16 +94,16 @@ namespace IKEA.PL.Controllers
 
             }
             ModelState.AddModelError(string.Empty, Message);
-            return View(employeeDto);
+            return View(employeeVm);
         }
 
         [HttpGet]
-        public IActionResult Details(int? Id)
+        public async Task< IActionResult> Details(int? Id)
         {
             if (Id == null)
                 return BadRequest();
 
-            var employee = _employeeService.GetEmployeeById(Id.Value);
+            var employee = await _employeeService.GetEmployeeByIdAsync(Id.Value);
 
             if (employee == null)
                 return NotFound();
@@ -83,64 +112,57 @@ namespace IKEA.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Update(int? Id)
+        public async Task< IActionResult >Update(int? Id)
         {
             if (Id == null)
                 return BadRequest();
-            var entity = _employeeService.GetEmployeeById(Id.Value);
+            var entity =  await _employeeService.GetEmployeeByIdAsync(Id.Value);
             if (entity == null)
                 return NotFound();
-            ViewData["Departments"] = _departmentService.GetAllDepartments();
+            ViewData["Departments"] = _departmentService.GetAllDepartmentsAsync();
 
-            return View(new EmployeeEditViewModel()
-            {
-
-                Name = entity.Name,
-                Salary = entity.Salary,
-                IsActive = entity.IsActive,
-                HiringDate = entity.HiringDate,
-                Address = entity.Address,
-                Email = entity.Email,
-                Age = entity.Age,
-                PhoneNumber = entity.PhoneNumber,
-                Gender = entity.Gender,
-                DepartmentId= entity.DepartmentId,
-                
-            
-
-            });
+            var Employee =_mapper.Map<GetEmployeeDetailsDto,EmployeeEditViewModel>(entity);
+            return View(Employee);
         }
 
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
 
-        public IActionResult Update([FromRoute] int id, EmployeeEditViewModel employeevm)
+        public async Task< IActionResult >Update([FromRoute] int id, EmployeeEditViewModel employeevm)
         {
             if (!ModelState.IsValid)
                 return View(employeevm);
             var Message = string.Empty;
             try
             {
-                var entity = new UpdateEmployeeDto()
-                {
-                    Id = id,
-                    Name = employeevm.Name,
-                    Salary = employeevm.Salary,
-                    IsActive = employeevm.IsActive,
-                    Address = employeevm.Address,
-                    Age= employeevm.Age,
-                    PhoneNumber = employeevm.PhoneNumber,
-                    Gender = employeevm.Gender,
-                    Email = employeevm.Email,
-                    HiringDate= employeevm.HiringDate,
+                //var entity = new UpdateEmployeeDto()
+                //{
+                //    Id = id,
+                //    Name = employeevm.Name,
+                //    Salary = employeevm.Salary,
+                //    IsActive = employeevm.IsActive,
+                //    Address = employeevm.Address,
+                //    Age= employeevm.Age,
+                //    PhoneNumber = employeevm.PhoneNumber,
+                //    Gender = employeevm.Gender,
+                //    Email = employeevm.Email,
+                //    HiringDate= employeevm.HiringDate,
                    
-                };
-                var EmployeeUpdate = _employeeService.UpdateEmployee(entity) > 0;
+                //};
+                var entity=_mapper.Map<UpdateEmployeeDto>(employeevm);
+                var EmployeeUpdate =await _employeeService.UpdateEmployeeAsync(entity) > 0;
                 if (EmployeeUpdate)
-                    return RedirectToAction("Index");
+                
+                    TempData["Message"] = "Updated Successfully";
+                
+
                 else
-                    Message = "Failed To Update";
+                   
+                     TempData["Message"] = "Failed To Update ";
+
+
+                return RedirectToAction("Index");
 
 
             }
@@ -161,12 +183,12 @@ namespace IKEA.PL.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
 
-        public IActionResult Delete(int id)
+        public async Task< IActionResult >Delete(int id)
         {
             var Message = string.Empty;
             try
             {
-                var Deleted = _employeeService.DeleteEmployee(id);
+                var Deleted = await _employeeService.DeleteEmployeeAsync(id);
                 if (Deleted)
                     return RedirectToAction("Index");
                 else
@@ -185,6 +207,12 @@ namespace IKEA.PL.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task< IActionResult> Search(string Search)
+        {
+            var employees =await _employeeService.GetEmployeesAsync(Search);
+            return PartialView("Partials/Search" , employees);
         }
 
     }

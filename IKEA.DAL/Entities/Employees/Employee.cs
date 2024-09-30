@@ -24,7 +24,8 @@ namespace IKEA.DAL.Entities.Employees
         public bool IsActive { get; set; }
 
         public int? DepartmentId { get; set; }
-        public Department? Department { get; set; }
+        public virtual Department? Department { get; set; }
+        public string? Image {  get; set; }
 
 
     }

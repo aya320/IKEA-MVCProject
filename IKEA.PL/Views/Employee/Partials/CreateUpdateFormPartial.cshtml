@@ -1,0 +1,123 @@
+﻿@using IKEA.BLL.Services.Department
+@* @inject DepartmentService departmentsevice *@
+@model EmployeeEditViewModel 
+@{
+    ViewData["Title"] = "Create";
+    // var Departments = new SelectList(await departmentsevice.GetAllDepartmentsAsync(), nameof(GetAllDepartmentDto.Id), nameof(GetAllDepartmentDto.Name));
+    var Departments = ViewData["Department"] as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>());
+
+}
+
+<div class="row justify-content-center align-items-center flex-column">
+    <div asp-validation-summary="ModelOnly"> </div>
+    <div class="form-group">
+        <label class="form-label" asp-for="Name">   </label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"> </span>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" asp-for="Age">   </label>
+        <input asp-for="Age" class="form-control" />
+        <span asp-validation-for="Age" class="text-danger"> </span>
+    </div>
+
+   
+
+    <div class="form-group">
+        <label class="form-label" asp-for="Address">   </label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"> </span>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" asp-for="Salary">   </label>
+        <input asp-for="Salary" class="form-control" />
+        <span asp-validation-for="Salary" class="text-danger"> </span>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" asp-for="Email">   </label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"> </span>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" asp-for="PhoneNumber">   </label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"> </span>
+    </div>
+
+    <div class="form-group ">
+        <label class="control-lable mb-3" asp-for="DepartmentId"></label><br />
+        <select asp-for="DepartmentId" asp-items=" Departments" class="form-control">
+            <option value="">Select Department Type</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" asp-for="HiringDate">   </label>
+        <input type="date" asp-for="HiringDate" class="form-control" />
+        <span asp-validation-for="HiringDate" class="text-danger"> </span>
+    </div>
+
+    <div class="form-group">
+
+        <label class="control-label" asp-for="Gender"></label><br />
+
+        @foreach (Gender genderOption in Enum.GetValues(typeof(Gender)))
+        {
+            <label class="radio-inline">
+
+                <input type="radio" asp-for="Gender" value="@genderOption" />
+
+                @genderOption
+
+            </label>
+
+        }
+
+    </div>
+
+        <div class="form-group">
+            <label class="form-label" asp-for="Image">   </label>
+            <input asp-for="Image" class="form-control" />
+            @* <span asp-validation-for="Image" class="text-danger"> </span> *@
+        </div>
+    <br />
+    @*   <br />
+    <div class="form-group">
+
+    <label asp-for="EmployeeType" class="control-label"></label>
+
+    <select asp-for="EmployeeType" asp-items="Html.GetEnumSelectList<EmployeeType>()" class="form-control">
+
+    <option value="">Select Employee Type</option>
+
+    </select>
+
+    </div> *@
+    
+    <div class="form-check">
+
+        <input asp-for="IsActive" />
+        <label class="form-check-label" asp-for="IsActive" style="font-size:large;font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif ;color:indianred"></label>
+
+
+
+    </div>
+
+
+
+
+    <br />
+    <div>
+        <input type="submit" value="Submit" class="btn btn-dark" style="color:lightpink "
+               onmouseover="this.style.backgroundColor='hotpink'; this.style.color='';"
+               onmouseout="this.style.backgroundColor='black'; this.style.color='lightpink'; " />
+
+        <a asp-action="Index" class="btn btn-dark " style="color:mediumpurple"
+           onmouseover="this.style.backgroundColor='babypink'; this.style.color='';"
+           onmouseout="this.style.backgroundColor='black'; this.style.color='mediumpurple'; "> Cancel</a>
+    </div>
+  

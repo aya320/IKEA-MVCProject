@@ -1,12 +1,13 @@
 ﻿@model DepartmentEditViewModel
-<form action="/Department/Create" method="post" class="col-6">
-    <div asp-validation-summary="ModelOnly"> </div>
+
+<form asp-action="@ViewBag.Action" method="post" class="col-5">
+
     <div class="form-group">
         <label class="form-label" asp-for="Code">   </label>
         <input asp-for="Code" class="form-control" />
         <span asp-validation-for="Code" class="text-danger"> </span>
     </div>
-
+    
     <div class="form-group">
         <label class="form-label" asp-for="Name">   </label>
         <input asp-for="Name" class="form-control" />
@@ -27,8 +28,15 @@
     <br />
     <br />
     <div>
-        <input type="submit" value="Submit" class="btn btn-dark" style="color:lightpink " />
-        <a asp-action="Index" class="btn btn-dark " style="color:mediumpurple"> Cancel</a>
+        <div>
+            <input type="submit" value="Submit" class="btn btn-dark" style="color:lightpink "
+                   onmouseover="this.style.backgroundColor='hotpink'; this.style.color='';"
+                   onmouseout="this.style.backgroundColor='black'; this.style.color='lightpink'; " />
+
+            <a asp-action="Index" class="btn btn-dark " style="color:mediumpurple"
+               onmouseover="this.style.backgroundColor='babypink'; this.style.color='';"
+               onmouseout="this.style.backgroundColor='black'; this.style.color='mediumpurple'; "> Cancel</a>
+        </div> 
     </div>
 
 </form>

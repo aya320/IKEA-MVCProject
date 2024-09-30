@@ -1,26 +1,23 @@
-﻿using IKEA.BLL.Models.Employee;
-using IKEA.DAL.Entities.Departments;
+﻿using IKEA.BLL.Models.Common.Services.Attachment;
+using IKEA.BLL.Models.Employee;
 using IKEA.DAL.Entities.Employees;
-using IKEA.DAL.Persistance.Repositories.Departments;
-using IKEA.DAL.Persistance.Repositories.Employees;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using IKEA.DAL.Persistance.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 
 namespace IKEA.BLL.Services.Employees
 {
     public class EmployeeService : IEmployeeService
     {
-        private readonly IEmployeeRepository  _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IAttachmentService _attachmentService;
 
-        public EmployeeService(IEmployeeRepository employeeRepository)
+
+        public EmployeeService(IAttachmentService attachmentService, IUnitOfWork unitOfWork)
         {
-            _employeeRepository =  employeeRepository;
+            _unitOfWork = unitOfWork;
+            _attachmentService = attachmentService;
         }
-        public int CreateEmployee(CreateEmployeeDto entity)
+        public async Task< int> CreateEmployeeAsync(CreateEmployeeDto entity)
         {
             var employee = new Employee()
             {
@@ -38,25 +35,36 @@ namespace IKEA.BLL.Services.Employees
                 PhoneNumber = entity.PhoneNumber,
                 Gender = entity.Gender,
                 DepartmentId = entity.DepartmentId,
+
                 //EmployeeType = entity.EmployeeType,
 
+
+
+
             };
-            return _employeeRepository.Add(employee);
+
+            if (entity is not null)
+            {
+                employee.Image =await _attachmentService.UploadAsync(entity.Image, "Images");
+            }
+            _unitOfWork.EmployeeRepository.Add(employee);
+              return await _unitOfWork.CompeleteAsync();
         }
 
-        public bool DeleteEmployee(int id)
+        public async Task< bool> DeleteEmployeeAsync(int id)
         {
-          var employee =_employeeRepository.GetById(id);
+            var emp = _unitOfWork.EmployeeRepository;
+          var employee =await emp.GetByIdAsync(id);
             if(employee is { })
-               return _employeeRepository.Delete(employee)>0;
-            else
-                return false;
+                emp.Delete(employee);
+           
+                return await _unitOfWork.CompeleteAsync()>0;
 
         }
 
-        public IEnumerable<GetAllEmployeeDto> GetAllEmployees()
+        public async Task< IEnumerable<GetAllEmployeeDto>> GetEmployeesAsync(string Search)
         {
-            var query= _employeeRepository.GetIQueryable().Where(a=>!a.IsDeleted).Select(entity => new GetAllEmployeeDto
+            var employees = await _unitOfWork.EmployeeRepository.GetIQueryable().Where(a => !a.IsDeleted && (string.IsNullOrEmpty(Search) || a.Name.ToUpper().Contains(Search.ToUpper()))).Include(x=>x.Department).Select(entity => new GetAllEmployeeDto
             {
                 Id = entity.Id,
                 Name = entity.Name,
@@ -66,9 +74,12 @@ namespace IKEA.BLL.Services.Employees
                 Email = entity.Email,
                 Age = entity.Age,
                 Gender = entity.Gender,
+                DepartmentId=entity.Department.Id,
+                Department = entity.Department.Name ,
+                
                 //EmployeeType = entity.EmployeeType,
-            });
-            var employees = query.ToList();
+            }).ToListAsync();
+           
 
             //var firstEmployee = query.FirstOrDefault();
 
@@ -76,12 +87,12 @@ namespace IKEA.BLL.Services.Employees
             return employees;
         }
 
-        public GetEmployeeDetailsDto GetEmployeeById(int id)
+        public async Task< GetEmployeeDetailsDto> GetEmployeeByIdAsync(int id)
         {
-            var entity = _employeeRepository.GetById(id);
+            var entity =await _unitOfWork.EmployeeRepository.GetByIdAsync(id);
 
             if (entity is { })
-                return new GetEmployeeDetailsDto()
+                return  new GetEmployeeDetailsDto()
                 {
 
 
@@ -98,13 +109,17 @@ namespace IKEA.BLL.Services.Employees
                     CreatedBy = entity.CreatedBy,
                     CreatedOn = entity.CreatedOn,
                     LastModifiedOn = entity.LastModifiedOn,
+                    DepartmentId = entity.Department?.Id,
+                    Department = entity.Department?.Name,
+                    Image= entity.Image,
+
                     //EmployeeType = entity.EmployeeType,
                 };
             else
                 return null;
         }
 
-        public int UpdateEmployee(UpdateEmployeeDto entity)
+        public async Task< int> UpdateEmployeeAsync(UpdateEmployeeDto entity)
         {
             var employee = new Employee()
             {
@@ -125,7 +140,12 @@ namespace IKEA.BLL.Services.Employees
                 //EmployeeType = entity.EmployeeType,
 
             };
-            return _employeeRepository.Update(employee);
+
+            if (entity.Image is not null)
+                employee.Image = await _attachmentService.UploadAsync(entity.Image, "Images");
+
+            _unitOfWork.EmployeeRepository.Update(employee);
+            return await _unitOfWork.CompeleteAsync();
         }
     }
 }

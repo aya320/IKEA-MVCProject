@@ -17,27 +17,24 @@ namespace IKEA.DAL.Persistance.Repositories.Gereric
         {
             _dbcontext = dbContext;
         }
-        public int Add(T entity)
-        {
-            _dbcontext.Set<T>().Add(entity);
-            return _dbcontext.SaveChanges();
-        }
+        public void Add(T entity)=>  _dbcontext.Set<T>().Add(entity);
+            
 
-        public int Delete(T entity)
+        public void Delete(T entity)
         {
             entity.IsDeleted=true;
             _dbcontext.Set<T>().Update(entity);
-            return _dbcontext.SaveChanges();
+         
         }
 
-        public IEnumerable<T> GetAll(bool AsNoTracking = true)
+        public async Task< IEnumerable<T>> GetAllAsync (bool AsNoTracking = true)
         {
             if (AsNoTracking)
             {
-                return _dbcontext.Set<T>().Where(a=>!a.IsDeleted).AsNoTracking().ToList();
+                return await _dbcontext.Set<T>().Where(a=>!a.IsDeleted).AsNoTracking().ToListAsync();
             }
             else
-                return _dbcontext.Set<T>().Where(a => !a.IsDeleted).ToList();
+                return await _dbcontext.Set<T>().Where(a => !a.IsDeleted).ToListAsync();
 
 
         }
@@ -52,18 +49,15 @@ namespace IKEA.DAL.Persistance.Repositories.Gereric
             throw new NotImplementedException();
         }
 
-        public T GetById(int id)
+        public async Task< T> GetByIdAsync(int id)
         {
-            var Result = _dbcontext.Set<T>().Find(id);
-            return Result;
+            return await _dbcontext.Set<T>().FindAsync(id);
         }
 
 
-        public int Update(T entity)
-        {
-            _dbcontext.Set<T>().Update(entity);
-            return _dbcontext.SaveChanges();
-        }
+        public void Update(T entity)=>  _dbcontext.Set<T>().Update(entity);
+         
+       
 
       
     }

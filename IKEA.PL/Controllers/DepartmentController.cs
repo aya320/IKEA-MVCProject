@@ -1,4 +1,5 @@
-﻿using IKEA.BLL.Models.Department;
+﻿using AutoMapper;
+using IKEA.BLL.Models.Department;
 using IKEA.BLL.Services.Department;
 using IKEA.DAL.Entities.Departments;
 using IKEA.PL.ViewModels.Departments;
@@ -12,20 +13,22 @@ namespace IKEA.PL.Controllers
         private readonly IDepartmentService _departmentService;
         private readonly ILogger<DepartmentController> _logger;
         private readonly IWebHostEnvironment _environment;
+        private readonly IMapper _mapper;
 
-        public DepartmentController(IDepartmentService departmentService, ILogger<DepartmentController> logger, IWebHostEnvironment environment)
+        public DepartmentController(IDepartmentService departmentService, ILogger<DepartmentController> logger, IWebHostEnvironment environment, IMapper mapper )
         {
             _departmentService = departmentService;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
+           _mapper = mapper;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task< IActionResult> Index()
         {  //
            // ViewData["Message"] = "Hello Yoyo";
            // ViewBag.Message = "Hello Ayoy";
-            var department = _departmentService.GetAllDepartments();
+            var department =await _departmentService.GetAllDepartmentsAsync();
             return View(department);
         }
 
@@ -40,7 +43,7 @@ namespace IKEA.PL.Controllers
         //[ValidateAntiForgeryToken]
 
 
-        public IActionResult Create(DepartmentEditViewModel departmentvm)
+        public async Task< IActionResult> Create(DepartmentEditViewModel departmentvm)
         {
             if (!ModelState.IsValid)
                 return View(departmentvm);
@@ -48,14 +51,15 @@ namespace IKEA.PL.Controllers
             var Message = string.Empty;
             try
             {
-                var Created = new CreateDepartmentDto()
-                {
-                    Code = departmentvm.Code,
-                    Name = departmentvm.Name,
-                    CreationDate = departmentvm.CreationDate,
-                    Description = departmentvm.Description,
-                };
-                var department = _departmentService.CreateDepartment(Created);
+                //var Created = new CreateDepartmentDto()
+                //{
+                //    Code = departmentvm.Code,
+                //    Name = departmentvm.Name,
+                //    CreationDate = departmentvm.CreationDate,
+                //    Description = departmentvm.Description,
+                //};
+                var Created = _mapper.Map<CreateDepartmentDto>(departmentvm);
+                var department = await _departmentService.CreateDepartmentAsync(Created);
                 if (department > 0)
                     TempData["Message"] = "Created Successfully";  
                 else
@@ -78,12 +82,12 @@ namespace IKEA.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int? Id)
+        public async Task< IActionResult> Details(int? Id)
         {
             if (Id == null)
                 return BadRequest();
 
-            var deppartment = _departmentService.GetDepartmentById(Id.Value);
+            var deppartment =await _departmentService.GetDepartmentByIdAsync(Id.Value);
 
             if (deppartment == null)
                 return NotFound();
@@ -92,46 +96,51 @@ namespace IKEA.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Update(int? Id)
+        public async Task< IActionResult> Update(int? Id)
         {
             if (Id == null)
                 return BadRequest();
-            var department = _departmentService.GetDepartmentById(Id.Value);
+            var department = await _departmentService.GetDepartmentByIdAsync(Id.Value);
             if (department == null)
                 return NotFound();
-            return View(new DepartmentEditViewModel()
-            {
-                Code = department.Code,
-                Name = department.Name,
-                Description = department.Description,
-                CreationDate = department.CreationDate,
 
-            });
+            var departmentvm=_mapper.Map<GetDepartmentDetailsDto,DepartmentEditViewModel>(department);
+            return View(departmentvm);
         }
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
 
-        public IActionResult Update([FromRoute] int id, DepartmentEditViewModel departmentvm)
+        public async Task< IActionResult> Update([FromRoute] int id, DepartmentEditViewModel departmentvm)
         {
             if (!ModelState.IsValid)
                 return View(departmentvm);
             var Message = string.Empty;
             try
             {
-                var department = new UpdateDepartmentDto()
-                {
-                    Id = id,
-                    Code = departmentvm.Code,
-                    Name = departmentvm.Name,
-                    Description = departmentvm.Description,
-                    CreationDate = departmentvm.CreationDate,
-                };
-                var departmentUpdate = _departmentService.UpdateDepartment(department) > 0;
+                //var department = new UpdateDepartmentDto()
+                //{
+                //    Id = id,
+                //    Code = departmentvm.Code,
+                //    Name = departmentvm.Name,
+                //    Description = departmentvm.Description,
+                //    CreationDate = departmentvm.CreationDate,
+                //};
+
+                var department = _mapper.Map<UpdateDepartmentDto>(departmentvm);
+
+                var departmentUpdate =await _departmentService.UpdateDepartmentAsync(department) > 0;
                 if (departmentUpdate)
-                    return RedirectToAction("Index");
+
+                    TempData["Message"] = "Updated Successfully";
+
+
                 else
-                    Message = "Failed To Update";
+
+                    TempData["Message"] = "Failed To Update ";
+
+
+                return RedirectToAction("Index");
 
 
             }
@@ -157,12 +166,12 @@ namespace IKEA.PL.Controllers
 
         //[ValidateAntiForgeryToken]
         [HttpPost]
-        public IActionResult Delete(int id)
+        public async Task< IActionResult >Delete(int id)
         {
             var Message = string.Empty;
             try
             {
-                var Deleted = _departmentService.DeleteDepartment(id);
+                var Deleted = await _departmentService.DeleteDepartmentAsync(id);
                 if (Deleted)
                     return RedirectToAction("Index");
                 else

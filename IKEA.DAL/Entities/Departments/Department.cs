@@ -13,7 +13,7 @@ namespace IKEA.DAL.Entities.Departments
         public string? Description { get; set; } = null!;
         public string Code { get; set; } = null!;
         public DateOnly CreationDate { get; set; }
-        public ICollection<Employee> Employees { get; set; }
+        public virtual ICollection<Employee> Employees { get; set; }
 
 
     }

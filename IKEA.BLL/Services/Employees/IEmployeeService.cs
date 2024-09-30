@@ -1,19 +1,13 @@
-﻿using IKEA.BLL.Models.Department;
-using IKEA.BLL.Models.Employee;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IKEA.BLL.Models.Employee;
 
 namespace IKEA.BLL.Services.Employees
 {
     public interface IEmployeeService
     {
-        IEnumerable<GetAllEmployeeDto> GetAllEmployees();
-        GetEmployeeDetailsDto GetEmployeeById(int id);
-        int CreateEmployee(CreateEmployeeDto entity);
-        int UpdateEmployee(UpdateEmployeeDto entity);
-        bool DeleteEmployee(int id);
+        Task< IEnumerable<GetAllEmployeeDto>> GetEmployeesAsync(string Search);
+        Task< GetEmployeeDetailsDto?> GetEmployeeByIdAsync(int id);
+        Task< int> CreateEmployeeAsync(CreateEmployeeDto entity);
+        Task< int> UpdateEmployeeAsync(UpdateEmployeeDto entity);
+        Task< bool> DeleteEmployeeAsync(int id);
     }
 }

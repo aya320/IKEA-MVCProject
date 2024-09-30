@@ -1,23 +1,20 @@
 ﻿using IKEA.BLL.Models.Department;
-using IKEA.DAL.Persistance.Repositories.Departments;
+using IKEA.DAL.Persistance.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IKEA.BLL.Services.Department
 {
     public class DepartmentService : IDepartmentService
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DepartmentService(IDepartmentRepository departmentRepository)
+        
+        public DepartmentService(IUnitOfWork unitOfWork)
         {
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
         }
-        public int CreateDepartment(CreateDepartmentDto department)
+
+        public async Task< int> CreateDepartmentAsync(CreateDepartmentDto department)
         {
             var CreatedDepartment = new IKEA.DAL.Entities.Departments.Department()
             {
@@ -30,22 +27,24 @@ namespace IKEA.BLL.Services.Department
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
             };
-            return _departmentRepository.Add(CreatedDepartment);
+             _unitOfWork.DepartmentRepository.Add(CreatedDepartment);
+            return await _unitOfWork.CompeleteAsync();
         }
 
-        public bool DeleteDepartment(int Id)
+        public async Task< bool> DeleteDepartmentAsync(int Id)
         {
-           var department =_departmentRepository.GetById(Id);
+            var dept =  _unitOfWork.DepartmentRepository;
+           var department = await dept.GetByIdAsync(Id);
             if (department is { })
             
-                return _departmentRepository.Delete(department)>0;
-            else 
-                return false;
+                 dept.Delete(department);
+          
+                return await _unitOfWork.CompeleteAsync()>0;
         }
 
-        public IEnumerable<GetAllDepartmentDto> GetAllDepartments()
+        public async Task< IEnumerable<GetAllDepartmentDto>> GetAllDepartmentsAsync()
         {
-          var deparments = _departmentRepository.GetIQueryable().Where(a => !a.IsDeleted).Select(department => new GetAllDepartmentDto
+          var deparments = await _unitOfWork.DepartmentRepository.GetIQueryable().Where(a => !a.IsDeleted).Select(department => new GetAllDepartmentDto
           {
               Id = department.Id,
               Name = department.Name,
@@ -54,16 +53,16 @@ namespace IKEA.BLL.Services.Department
               Code = department.Code,
           }
               
-              ).AsNoTracking().ToList();
-            return deparments; 
+              ).AsNoTracking().ToListAsync();
+            return  deparments; 
         }
 
-        public GetDepartmentDetailsDto? GetDepartmentById(int Id)
+        public async Task< GetDepartmentDetailsDto?> GetDepartmentByIdAsync(int Id)
         {
-           var department = _departmentRepository.GetById(Id);
+           var department =await _unitOfWork.DepartmentRepository.GetByIdAsync(Id);
             if (department is { })
             {
-                return new GetDepartmentDetailsDto
+                return  new GetDepartmentDetailsDto
                 {
                     Id = department.Id,
                     Name = department.Name,
@@ -82,7 +81,7 @@ namespace IKEA.BLL.Services.Department
            
         }
 
-        public int UpdateDepartment(UpdateDepartmentDto department)
+        public async Task< int> UpdateDepartmentAsync(UpdateDepartmentDto department)
         {
             var UpdatedDepartment = new IKEA.DAL.Entities.Departments.Department()
             {
@@ -94,7 +93,8 @@ namespace IKEA.BLL.Services.Department
                 LastModifiedBy = 1,
                 LastModifiedOn = DateTime.UtcNow,
             };
-            return _departmentRepository.Update(UpdatedDepartment);
+             _unitOfWork.DepartmentRepository.Update(UpdatedDepartment);
+            return await _unitOfWork.CompeleteAsync();
         }
     }
 }
