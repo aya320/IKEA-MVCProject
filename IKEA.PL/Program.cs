@@ -35,7 +35,6 @@ namespace IKEA.PL
             builder.Services.AddTransient<IAttachmentService,AttachmentService >();
             builder.Services.AddAutoMapper(m=>m.AddProfile(new MappingProfile()));
 
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
