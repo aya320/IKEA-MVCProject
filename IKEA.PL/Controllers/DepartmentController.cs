@@ -3,12 +3,15 @@ using IKEA.BLL.Models.Department;
 using IKEA.BLL.Services.Department;
 using IKEA.DAL.Entities.Departments;
 using IKEA.PL.ViewModels.Departments;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 namespace IKEA.PL.Controllers
 {
-    public class DepartmentController : Controller
+	[Authorize]
+
+	public class DepartmentController : Controller
     {
         private readonly IDepartmentService _departmentService;
         private readonly ILogger<DepartmentController> _logger;

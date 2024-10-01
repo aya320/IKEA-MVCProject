@@ -61,7 +61,35 @@ namespace IKEA.PL
  
             }).AddEntityFrameworkStores<ApplicationDbContext>();
 
+            builder.Services.ConfigureApplicationCookie(Options =>
+            {
+                Options.LoginPath = "/Account/SignIn";
+                Options.LogoutPath= "/Account/SignIn";  
+            });
 
+			//builder.Services.AddAuthentication(options =>
+
+			//{
+
+			//	options.DefaultAuthenticateScheme = "Identity.Application";
+
+			//	options.DefaultChallengeScheme = "Identity.Application";
+
+			//})
+
+   //               .AddCookie("Both", ".AspNetCore.Both", options =>
+                  
+   //               {
+                  
+   //               	options.LoginPath = "/Account/Login";
+                  
+   //               	options.AccessDeniedPath = "/Home/Error";
+                  
+   //               	options.ExpireTimeSpan = TimeSpan.FromDays(10); 
+                  
+   //               options.LogoutPath = "/Account/SignIn";
+                  
+   //               });
 			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -78,6 +106,7 @@ namespace IKEA.PL
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.MapControllerRoute(
                 name: "default",

@@ -1,5 +1,6 @@
 ﻿using IKEA.DAL.Entities.Identity;
 using IKEA.PL.ViewModels.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -71,7 +72,7 @@ namespace IKEA.PL.Controllers
         {
 			if (!ModelState.IsValid)
 				return BadRequest();
-			var User = await _userManager.FindByNameAsync(model.Email);
+			var User = await _userManager.FindByEmailAsync(model.Email);
             if(User is { })
             {
                 var Flag = await _userManager.CheckPasswordAsync(User, model.Password);
