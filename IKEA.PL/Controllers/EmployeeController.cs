@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IKEA.PL.Controllers
 {
-	[Authorize]
+    [Authorize]
 
 	public class EmployeeController : Controller
     {

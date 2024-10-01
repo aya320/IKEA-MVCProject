@@ -17,6 +17,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<!-- web font -->
 	<link href="//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i" rel="stylesheet">
 	<!-- //web font -->
+	<title>  @ViewData["Title"]</title>
 </head>
 <body>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -25,6 +26,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<div class="main-w3layouts wrapper">
 		<h1> @ViewData["Title"] Form</h1>
 		<script src="~/lib/jquery/dist/jquery.min.js"></script>
+		<script src="~/js/site.js" asp-append-version="true"></script>
+
 		@RenderBody()
 		<!-- copyright -->
 		<div class="colorlibcopy-agile">
@@ -45,6 +48,5 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		</ul>
 	</div>
 	<!-- //main -->
-	<script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>

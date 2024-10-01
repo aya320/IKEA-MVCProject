@@ -3,17 +3,16 @@ using IKEA.BLL.Services.Department;
 using IKEA.BLL.Services.Employees;
 using IKEA.DAL.Entities.Identity;
 using IKEA.DAL.Persistance.Data;
-using IKEA.DAL.Persistance.Repositories.Departments;
-using IKEA.DAL.Persistance.Repositories.Employees;
 using IKEA.DAL.Persistance.UnitOfWork;
+using IKEA.PL.Helpers;
 using IKEA.PL.Mapping;
+using IKEA.PL.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace IKEA.PL
 {
-    public class Program
+	public class Program
     {
         public static void Main(string[] args)
         {
@@ -35,7 +34,9 @@ namespace IKEA.PL
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddTransient<IAttachmentService,AttachmentService >();
-            builder.Services.AddAutoMapper(m=>m.AddProfile(new MappingProfile()));
+			builder.Services.AddTransient<IMailSettings, EMailSettings>();
+
+			builder.Services.AddAutoMapper(m=>m.AddProfile(new MappingProfile()));
 
 
 			builder.Services.AddIdentity<ApplicationUser, IdentityRole>((options) =>
@@ -59,15 +60,21 @@ namespace IKEA.PL
 				options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(5);
 
  
-            }).AddEntityFrameworkStores<ApplicationDbContext>();
+            }).AddEntityFrameworkStores<ApplicationDbContext>().
+            AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(TokenOptions.DefaultProvider);
 
-            builder.Services.ConfigureApplicationCookie(Options =>
+			builder.Services.ConfigureApplicationCookie(Options =>
             {
                 Options.LoginPath = "/Account/SignIn";
                 Options.LogoutPath= "/Account/SignIn";  
+                Options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                Options.AccessDeniedPath = "/Home/Error";
                 //Options.ForwardSignOut= "/Account/SignIn";
             });
 
+			
+
+			builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
 			//builder.Services.AddAuthentication(options =>
 
 			//{
@@ -78,19 +85,21 @@ namespace IKEA.PL
 
 			//})
 
-   //               .AddCookie("Both", ".AspNetCore.Both", options =>
-                  
-   //               {
-                  
-   //               	options.LoginPath = "/Account/Login";
-                  
-   //               	options.AccessDeniedPath = "/Home/Error";
-                  
-   //               	options.ExpireTimeSpan = TimeSpan.FromDays(10); 
-                  
-   //               options.LogoutPath = "/Account/SignIn";
-                  
-   //               });
+			//               .AddCookie("Both", ".AspNetCore.Both", options =>
+
+			//               {
+
+			//               	options.LoginPath = "/Account/Login";
+
+			//               	options.AccessDeniedPath = "/Home/Error";
+
+			//               	options.ExpireTimeSpan = TimeSpan.FromDays(10); 
+
+			//               options.LogoutPath = "/Account/SignIn";
+
+			//               });
+
+			
 			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -103,11 +112,11 @@ namespace IKEA.PL
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+	
 
-            app.UseRouting();
-
-            app.UseAuthorization();
+			app.UseRouting();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",

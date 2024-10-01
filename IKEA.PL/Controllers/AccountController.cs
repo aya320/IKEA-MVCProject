@@ -1,6 +1,8 @@
-﻿using IKEA.DAL.Entities.Identity;
+﻿using IKEA.DAL.Entities.Email;
+using IKEA.DAL.Entities.Identity;
+using IKEA.PL.Helpers;
+using IKEA.PL.Settings;
 using IKEA.PL.ViewModels.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,12 +10,15 @@ namespace IKEA.PL.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+		private readonly IMailSettings _mailSettings;
+		private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+
+        public AccountController(IMailSettings mailSettings,UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
-            _userManager = userManager;
+			_mailSettings = mailSettings;
+			_userManager = userManager;
             _signInManager = signInManager;
         }
         [HttpGet]
@@ -89,8 +94,16 @@ namespace IKEA.PL.Controllers
 						ModelState.AddModelError(string.Empty, "Your account is locked ");
 
 					if (result.Succeeded)
+					{
+                        return RedirectToAction(nameof(HomeController.Index), "Home");
+                        //return Redirect("https://www.example.com");
+                        //return RedirectToRoute(new { controller = "HomeController", action = "Index" });
 
-						return RedirectToAction(nameof(HomeController.Index), "Home");
+                        //string url = Url.Action("Index", "HomeController");
+                        //return Redirect(url);
+                        
+
+                    }
 				}
 
                
@@ -106,6 +119,72 @@ namespace IKEA.PL.Controllers
             return RedirectToAction(nameof(SignIn));
         }
 
+        [HttpGet]
+        public IActionResult CheckYourEmail()
+        {
+            return View();
+        }
 
-	}
+		[HttpGet]
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+		[HttpPost]
+		public async Task<IActionResult> SendResetPasswordEmail(ForgetPasswordViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = await _userManager.FindByEmailAsync(model.Email);
+
+				if (user is not null)
+				{
+					var resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+					var passwordUrl = Url.Action("ResetPassword", "Account", new { email = user.Email, token = resetPasswordToken }, Request.Scheme);
+		
+					var email = new Email()
+					{
+						To = model.Email,
+						Subject = "Reset password",
+						Body = passwordUrl
+					};
+					_mailSettings.SendEmail(email);
+					return Redirect(nameof(CheckYourEmail));
+				}
+				ModelState.AddModelError(string.Empty, "There is not account with this email");
+			}
+			return View(model);
+		}
+
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email, string token)
+        {
+            TempData["Email"] = email;
+            TempData["token"] = token;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+               
+                var user = await _userManager.FindByNameAsync(model.Email);
+                if (user is { })
+                {
+                    _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+                    return RedirectToAction(nameof(SignIn));
+                }
+                ModelState.AddModelError(string.Empty, "Url is not valid");
+            }
+            return View(model);
+        }
+
+
+
+
+    }
 }

@@ -5,8 +5,8 @@ using System.Diagnostics;
 
 namespace IKEA.PL.Controllers
 {
-	[Authorize]
 
+    [Authorize]
 	public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
