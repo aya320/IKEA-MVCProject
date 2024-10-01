@@ -65,6 +65,7 @@ namespace IKEA.PL
             {
                 Options.LoginPath = "/Account/SignIn";
                 Options.LogoutPath= "/Account/SignIn";  
+                //Options.ForwardSignOut= "/Account/SignIn";
             });
 
 			//builder.Services.AddAuthentication(options =>
