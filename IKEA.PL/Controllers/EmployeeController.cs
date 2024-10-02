@@ -7,12 +7,15 @@ using IKEA.DAL.Entities.Departments;
 using IKEA.DAL.Entities.Employees;
 using IKEA.PL.ViewModels.Departments;
 using IKEA.PL.ViewModels.Employees;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IKEA.PL.Controllers
 {
-    public class EmployeeController : Controller
+    [Authorize]
+
+	public class EmployeeController : Controller
     {
         private readonly IEmployeeService _employeeService;
         private readonly ILogger<EmployeeController> _logger;
