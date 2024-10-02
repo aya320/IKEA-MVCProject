@@ -7,6 +7,8 @@ using IKEA.DAL.Persistance.UnitOfWork;
 using IKEA.PL.Helpers;
 using IKEA.PL.Mapping;
 using IKEA.PL.Settings;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -75,7 +77,22 @@ namespace IKEA.PL
 			
 
 			builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
-			//builder.Services.AddAuthentication(options =>
+
+			builder.Services.AddAuthentication(o =>
+            { 
+				o.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
+
+				o.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+			}
+			).AddGoogle(o =>
+			{
+               	IConfiguration GoogleAuthSection = builder.Configuration.GetSection("Authentication:Google");
+               
+               	o.ClientId = GoogleAuthSection["ClientId"];
+		        o.ClientSecret = GoogleAuthSection["ClientSecret"];
+
+			});
+           			//builder.Services.AddAuthentication(options =>
 
 			//{
 
@@ -99,7 +116,7 @@ namespace IKEA.PL
 
 			//               });
 
-			
+
 			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
